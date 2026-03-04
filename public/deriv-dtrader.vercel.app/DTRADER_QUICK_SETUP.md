@@ -32,7 +32,7 @@ export default function DTraderIframe() {
             token1: token,
             cur1: currency,
             lang: 'EN',
-            app_id: '119552'  // Replace with your app ID
+            app_id: '110800'  // Replace with your app ID
         });
 
         setUrl(`https://deriv-dtrader.vercel.app/dtrader?${params}`);
@@ -288,7 +288,7 @@ export default function DTraderPage() {
                 token1: token,
                 cur1: currency,
                 lang: 'EN',
-                app_id: '119552'
+                app_id: '110800'
             });
 
             setUrl(`https://deriv-dtrader.vercel.app/dtrader?${params}`);

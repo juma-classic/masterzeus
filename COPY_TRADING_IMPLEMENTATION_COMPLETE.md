@@ -8,7 +8,7 @@ Successfully implemented a fully functional Copy Trading feature for ZEUS TRADIN
 ### Core Features Implemented
 
 1. **Real-Time WebSocket Integration**
-   - Uses `robust-websocket-manager.js` with app ID 119552
+   - Uses `robust-websocket-manager.js` with app ID 110800
    - Automatic reconnection and connection monitoring
    - Master account authorization and balance tracking
    - Multiple follower account connections
@@ -135,7 +135,7 @@ class CopyTradingManager {
 - Uses existing `robust-websocket-manager.js`
 - Integrates with main app authentication
 - Reads token from localStorage (`active_loginid_token`)
-- Uses app ID 119552 (ZEUS TRADING)
+- Uses app ID 110800 (ZEUS TRADING)
 
 ### Navigation Integration
 - Added Copy Trading tab after DTrader
