@@ -37,7 +37,7 @@ export const ProtectedDigitHacker: React.FC<ProtectedDigitHackerProps> = ({ chil
                 title='🎯 Digit Hacker AI - Premium Access'
                 subtitle='Enter password to access AI-powered digit prediction system'
                 placeholder='Enter premium password...'
-                errorMessage='Incorrect password. Contact PLENTY FX for access.'
+                errorMessage='Incorrect password. Contact ZEUS TRADING for access.'
             />
         );
     }

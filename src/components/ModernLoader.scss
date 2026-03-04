@@ -1,4 +1,4 @@
-// PLENTY FX Loader - Premium Trading Theme
+// ZEUS TRADING Loader - Premium Trading Theme
 .zeus-loader {
     position: fixed;
     top: 0;
@@ -151,17 +151,18 @@
     // Lightning bolt container
     &__lightning-container {
         position: relative;
-        width: 200px;
-        height: 300px;
+        width: 280px;
+        height: 400px;
         display: flex;
         align-items: center;
         justify-content: center;
+        animation: floatBolt 3s ease-in-out infinite;
     }
 
     &__lightning-bolt {
         width: 100%;
         height: 100%;
-        filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
+        filter: drop-shadow(0 0 30px rgba(255, 215, 0, 1)) drop-shadow(0 0 50px rgba(255, 215, 0, 0.8));
         animation: boltPulse 2s infinite ease-in-out;
     }
 
@@ -395,9 +396,21 @@
     0%,
     100% {
         transform: scale(1);
+        filter: drop-shadow(0 0 30px rgba(255, 215, 0, 1)) drop-shadow(0 0 50px rgba(255, 215, 0, 0.8));
     }
     50% {
-        transform: scale(1.05);
+        transform: scale(1.08);
+        filter: drop-shadow(0 0 40px rgba(255, 215, 0, 1)) drop-shadow(0 0 70px rgba(255, 215, 0, 1));
+    }
+}
+
+@keyframes floatBolt {
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-20px);
     }
 }
 
@@ -514,8 +527,8 @@
         }
 
         &__lightning-container {
-            width: 150px;
-            height: 225px;
+            width: 200px;
+            height: 300px;
         }
 
         &__brand {

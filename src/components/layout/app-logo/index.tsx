@@ -13,7 +13,7 @@ export const AppLogo = () => {
             rel='noopener noreferrer'
             className='app-header__logo plenty-fx-logo'
         >
-            <span className='plenty-fx-text'>PLENTY FX</span>
+            <span className='plenty-fx-text'>ZEUS TRADING</span>
         </a>
     );
 };

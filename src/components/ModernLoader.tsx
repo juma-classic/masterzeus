@@ -23,7 +23,7 @@ const ModernLoader: React.FC<ModernLoaderProps> = ({ onFinish }) => {
         'Navigate markets with confidence',
         'Fast execution, reliable returns',
         'Growing your portfolio steadily',
-        'PLENTY FX - Your path to financial freedom',
+        'ZEUS TRADING - Your path to financial freedom',
         'Elevate your trading experience',
     ];
 
@@ -244,7 +244,7 @@ const ModernLoader: React.FC<ModernLoaderProps> = ({ onFinish }) => {
             { duration: 900, text: 'Activating Trading Signals', progress: 70 },
             { duration: 700, text: 'Loading Strategies', progress: 85 },
             { duration: 600, text: 'Preparing Dashboard', progress: 95 },
-            { duration: 500, text: 'Welcome to PLENTY FX', progress: 100 },
+            { duration: 500, text: 'Welcome to ZEUS TRADING', progress: 100 },
         ];
 
         let currentPhase = 0;
@@ -322,19 +322,8 @@ const ModernLoader: React.FC<ModernLoaderProps> = ({ onFinish }) => {
 
             {/* Main content */}
             <div className='zeus-loader__content'>
-                {/* PLENTY FX Logo */}
-                <div className='zeus-loader__logo-container'>
-                    <img 
-                        src='/plentyfxlogo.png' 
-                        alt='PLENTY FX Logo' 
-                        className='zeus-loader__logo'
-                    />
-                    <div className='zeus-loader__logo-glow' />
-                    <div className='zeus-loader__logo-glow zeus-loader__logo-glow--secondary' />
-                </div>
-
                 {/* Zeus Lightning Bolt Icon */}
-                <div className='zeus-loader__lightning-container' style={{ display: 'none' }}>
+                <div className='zeus-loader__lightning-container'>
                     {/* Animated lightning bolt with intricate parts */}
                     <svg
                         className='zeus-loader__lightning-bolt'
