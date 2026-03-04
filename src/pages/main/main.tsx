@@ -37,6 +37,9 @@ import { DCircles } from '@/components/dcircles/DCircles';
 // DTrader Component
 import DTraderIframe from '@/components/dtrader/DTraderIframe';
 
+// Bot Switcher Component
+import { BotSwitcher } from '@/components/bot-switcher';
+
 const DashboardIcon = () => (
     <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
         <path d='M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z' fill='currentColor' />
@@ -192,6 +195,27 @@ const TrackSignalsIcon = () => (
             strokeLinecap='round'
             opacity='0.6'
         />
+    </svg>
+);
+
+const BotSwitcherIcon = () => (
+    <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+        {/* Two bots */}
+        <rect x='4' y='6' width='6' height='8' rx='1' fill='#4169E1' opacity='0.6' />
+        <rect x='14' y='10' width='6' height='8' rx='1' fill='#FFD700' opacity='0.6' />
+        
+        {/* Switch arrows */}
+        <path d='M11 10L13 10L12 8L11 10Z' fill='#FFD700' />
+        <path d='M13 14L11 14L12 16L13 14Z' fill='#4169E1' />
+        
+        {/* Bot eyes */}
+        <circle cx='6' cy='9' r='0.8' fill='#FFD700' />
+        <circle cx='8' cy='9' r='0.8' fill='#FFD700' />
+        <circle cx='16' cy='13' r='0.8' fill='#4169E1' />
+        <circle cx='18' cy='13' r='0.8' fill='#4169E1' />
+        
+        {/* Rotation indicator */}
+        <path d='M12 6C12 6 10 4 8 4M12 18C12 18 14 20 16 20' stroke='currentColor' strokeWidth='1' strokeLinecap='round' opacity='0.5' />
     </svg>
 );
 
@@ -2006,6 +2030,18 @@ const AppWrapper = observer(() => {
                             }
                             id='id-bot-builder'
                         />
+                        {/* BOT SWITCHER TAB */}
+                        <div
+                            label={
+                                <>
+                                    <BotSwitcherIcon />
+                                    <Localize i18n_default_text='Bot Switcher' />
+                                </>
+                            }
+                            id='id-bot-switcher'
+                        >
+                            <BotSwitcher />
+                        </div>
                         {/* DCIRCLES TAB */}
                         <div
                             label={
