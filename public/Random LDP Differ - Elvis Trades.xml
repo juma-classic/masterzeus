@@ -1,4 +1,4 @@
-ad<xml xmlns="https://developers.google.com/blockly/xml" is_dbot="true" collection="false">
+<xml xmlns="https://developers.google.com/blockly/xml" is_dbot="true" collection="false">
   <variables>
     <variable id="(Ue1Y,8f19G+.l|e,*=q">Initial Stake</variable>
     <variable id="6a~#/eWO@~Run6Mq.AN]">Duration</variable>
