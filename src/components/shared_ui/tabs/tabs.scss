@@ -1,0 +1,542 @@
+@use 'components/shared/styles/devices' as *;
+
+.dc-tabs {
+    position: relative;
+    display: grid;
+
+    &--top {
+        grid-template-rows: auto 1fr;
+    }
+
+    &--100vw {
+        width: 100vw;
+    }
+
+    &__list {
+        width: 100%;
+        line-height: 38px;
+        display: flex;
+        position: relative;
+
+        @include mobile-or-tablet-screen {
+            justify-content: center;
+        }
+
+        &--overflow-hidden {
+            overflow-y: hidden;
+            display: block;
+        }
+
+        &--border-bottom {
+            border-bottom: 2px solid var(--general-section-1);
+        }
+
+        &--top {
+            order: 0;
+        }
+
+        &--bottom {
+            order: 1;
+            border-top: 2px solid var(--general-section-1);
+        }
+
+        &--center {
+            justify-content: center;
+            width: fit-content;
+            margin: auto;
+
+            .dc-tabs__item {
+                padding: 0 2.2rem;
+            }
+        }
+
+        &--fit-content {
+            @include mobile-or-tablet-screen {
+                width: fit-content;
+            }
+        }
+
+        &--header-fit-content {
+            width: fit-content;
+
+            @include mobile-or-tablet-screen {
+                display: flex;
+                justify-content: space-evenly;
+            }
+        }
+
+        &:not(&--header-fit-content) {
+            justify-content: center;
+        }
+
+        &--full-width {
+            width: 100vw;
+        }
+    }
+
+    &__item {
+        list-style: none;
+        font-size: 14px;
+        text-align: center;
+        white-space: nowrap;
+        color: var(--text-general);
+        -webkit-touch-callout: none;
+        -webkit-tap-highlight-color: transparent;
+        cursor: pointer;
+
+        &__counter {
+            margin-top: -2rem;
+            vertical-align: middle;
+        }
+
+        &__icon {
+            padding-right: 0.7rem;
+
+            @include mobile-or-tablet-screen {
+                padding-right: 0;
+                padding-top: 0.5rem;
+            }
+        }
+
+        &--header-fit-content {
+            padding: 0 29px;
+        }
+
+        &--is-hidden {
+            display: none;
+        }
+
+        &--is-scrollable-and-active {
+            position: relative;
+
+            &:after {
+                border-bottom: 2px solid var(--brand-red-coral);
+                content: '';
+                position: absolute;
+                left: 0;
+                display: block;
+                width: 100%;
+            }
+        }
+
+        &:not(&--header-fit-content) {
+            width: var(--tab-width);
+        }
+    }
+
+    &__active {
+        font-weight: 400;
+        color: var(--text-general);
+    }
+
+    &__active-line {
+        display: none; /* Hide the active line indicator */
+        position: absolute;
+
+        /* rtl:begin:ignore */
+        left: 0;
+
+        /* rtl:end:ignore */
+        height: 2px;
+        background: var(--brand-red-coral);
+        transition: all ease-in-out 0.3s;
+
+        &--top {
+            bottom: -2px;
+        }
+
+        &--bottom {
+            top: -2px;
+        }
+
+        &--is-hidden {
+            display: none;
+        }
+
+        &--fit-content {
+            @include mobile-or-tablet-screen {
+                width: 120px;
+            }
+        }
+
+        &:not(&--header-fit-content) {
+            width: var(--tab-width);
+        }
+    }
+}
+
+// Enhanced Modern Navigation Tabs - Bull vs Bear Theme
+// PLENTY FX - Professional Theme for Navigation Tabs
+.dc-tabs--enhanced {
+    background: linear-gradient(135deg, #0a0e27 0%, #0f1419 50%, #140a14 100%);
+    box-shadow: 
+        0 4px 20px rgba(0, 0, 0, 0.3),
+        0 0 40px rgba(0, 191, 255, 0.1),
+        0 0 40px rgba(255, 68, 68, 0.1);
+    border-bottom: 2px solid rgba(0, 191, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+
+    // Bull vs Bear energy overlay
+    &:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+            radial-gradient(circle at 20% 50%, rgba(0, 191, 255, 0.05) 0%, transparent 50%),
+            radial-gradient(circle at 80% 50%, rgba(255, 68, 68, 0.05) 0%, transparent 50%);
+        pointer-events: none;
+    }
+
+    // Energy pulse effect
+    &:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            90deg, 
+            transparent, 
+            rgba(0, 191, 255, 0.1), 
+            rgba(255, 68, 68, 0.1), 
+            transparent
+        );
+        animation: energyWave 6s ease-in-out infinite;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .dc-tabs__list {
+        padding: 0.5rem 1rem;
+        gap: 0.5rem;
+        justify-content: center;
+        border-bottom: none;
+        position: relative;
+        z-index: 1;
+    }
+
+    .dc-tabs__item {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1rem 1.5rem !important;
+        // Bull vs Bear gradient background
+        background: linear-gradient(135deg, #0a0e27 0%, #0f1419 50%, #140a14 100%);
+        border: 2px solid rgba(100, 100, 100, 0.3);
+        border-radius: 12px;
+        color: rgba(255, 255, 255, 0.85) !important;
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        user-select: none;
+        line-height: 1.2;
+        box-shadow: 
+            0 2px 8px rgba(0, 0, 0, 0.3),
+            0 0 10px rgba(0, 191, 255, 0.05),
+            0 0 10px rgba(255, 68, 68, 0.05);
+        overflow: hidden;
+
+        // Energy glow effect base
+        &:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 0;
+            height: 0;
+            background: radial-gradient(
+                circle, 
+                rgba(0, 191, 255, 0.2) 0%, 
+                rgba(255, 68, 68, 0.2) 50%,
+                transparent 70%
+            );
+            border-radius: 50%;
+            transition: all 0.4s ease;
+            pointer-events: none;
+        }
+
+        // Ensure all text is visible
+        span,
+        div {
+            color: rgba(255, 255, 255, 0.85) !important;
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.2);
+        }
+
+        // Icon styling with bull/bear theme
+        svg {
+            width: 24px;
+            height: 24px;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 2px 4px rgba(0, 191, 255, 0.3));
+            color: #00BFFF !important;
+        }
+
+        // Hover state - Bull energy (blue)
+        &:hover:not(&--active) {
+            background: linear-gradient(135deg, #0a1a2e 0%, #0f1f2e 50%, #0a1520 100%);
+            border-color: rgba(0, 191, 255, 0.6);
+            color: #00BFFF !important;
+            transform: translateY(-2px);
+            box-shadow: 
+                0 6px 20px rgba(0, 191, 255, 0.3),
+                0 0 30px rgba(0, 191, 255, 0.2);
+
+            &:before {
+                width: 200%;
+                height: 200%;
+            }
+
+            span,
+            div {
+                color: #00BFFF !important;
+                text-shadow: 0 0 15px rgba(0, 191, 255, 0.5);
+            }
+
+            svg {
+                transform: scale(1.1);
+                filter: drop-shadow(0 4px 8px rgba(0, 191, 255, 0.5));
+                color: #00BFFF !important;
+            }
+        }
+
+        // Active state - Bull vs Bear power
+        &--active {
+            background: linear-gradient(
+                135deg, 
+                rgba(0, 127, 255, 0.2) 0%, 
+                rgba(0, 191, 255, 0.15) 25%,
+                rgba(255, 68, 68, 0.15) 75%,
+                rgba(255, 68, 68, 0.2) 100%
+            ) !important;
+            border: 2px solid transparent !important;
+            border-image: linear-gradient(
+                135deg,
+                #00BFFF 0%,
+                #0080FF 25%,
+                #FF4444 75%,
+                #CC0000 100%
+            ) 1 !important;
+            color: #FFFFFF !important;
+            box-shadow:
+                0 8px 24px rgba(0, 191, 255, 0.3),
+                0 8px 24px rgba(255, 68, 68, 0.3),
+                0 0 40px rgba(0, 191, 255, 0.2),
+                0 0 40px rgba(255, 68, 68, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+
+            span,
+            div {
+                color: #FFFFFF !important;
+                text-shadow: 
+                    0 0 10px rgba(0, 191, 255, 0.5),
+                    0 0 10px rgba(255, 68, 68, 0.5);
+                font-weight: 700;
+            }
+
+            svg {
+                transform: scale(1.15);
+                filter: 
+                    drop-shadow(0 2px 6px rgba(0, 191, 255, 0.6))
+                    drop-shadow(0 2px 6px rgba(255, 68, 68, 0.6));
+                color: #FFFFFF !important;
+                animation: iconDualGlow 2s ease-in-out infinite;
+            }
+
+            // Active indicator - Energy line
+            &:after {
+                content: '';
+                position: absolute;
+                bottom: -2px;
+                left: 0;
+                width: 100%;
+                height: 3px;
+                background: linear-gradient(
+                    90deg, 
+                    #00BFFF 0%, 
+                    #0080FF 25%,
+                    #FF4444 75%,
+                    #CC0000 100%
+                );
+                border-radius: 2px 2px 0 0;
+                animation: energyLine 2s ease-in-out infinite;
+                box-shadow: 
+                    0 0 10px rgba(0, 191, 255, 0.8),
+                    0 0 10px rgba(255, 68, 68, 0.8);
+            }
+
+            // Energy particles
+            &:before {
+                width: 150%;
+                height: 150%;
+                background: radial-gradient(
+                    circle, 
+                    rgba(0, 191, 255, 0.15) 0%,
+                    rgba(255, 68, 68, 0.15) 50%,
+                    transparent 70%
+                );
+                animation: dualEnergyPulse 3s ease-in-out infinite;
+            }
+        }
+
+        // Pressed state
+        &:active {
+            transform: translateY(-1px);
+        }
+    }
+
+    // Badge for notifications (bull/bear themed)
+    .tab-badge {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        min-width: 20px;
+        height: 20px;
+        padding: 0 6px;
+        background: linear-gradient(135deg, #00BFFF 0%, #FF4444 100%);
+        border-radius: 10px;
+        color: #FFF;
+        font-size: 0.7rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 
+            0 2px 8px rgba(0, 191, 255, 0.4),
+            0 2px 8px rgba(255, 68, 68, 0.4);
+        animation: pulseBadge 2s infinite;
+    }
+
+    // Responsive design
+    @media (width <= 1024px) {
+        .dc-tabs__list {
+            gap: 0.25rem;
+            padding: 0.5rem;
+        }
+
+        .dc-tabs__item {
+            padding: 0.75rem 1rem !important;
+            font-size: 10px;
+            gap: 0.5rem;
+
+            svg {
+                width: 20px;
+                height: 20px;
+            }
+        }
+    }
+
+    @media (width <= 768px) {
+        .dc-tabs__list {
+            overflow-x: auto;
+            justify-content: flex-start;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
+
+        .dc-tabs__item {
+            padding: 0.6rem 0.8rem !important;
+            font-size: 9px;
+            flex-shrink: 0;
+
+            span:not(.tab-badge) {
+                display: none;
+            }
+
+            svg {
+                width: 22px;
+                height: 22px;
+            }
+        }
+    }
+}
+
+// Bull vs Bear Theme Animations
+@keyframes pulseBadge {
+    0%,
+    100% {
+        transform: scale(1);
+        box-shadow: 
+            0 2px 8px rgba(0, 191, 255, 0.4),
+            0 2px 8px rgba(255, 68, 68, 0.4);
+    }
+
+    50% {
+        transform: scale(1.1);
+        box-shadow: 
+            0 4px 16px rgba(0, 191, 255, 0.6),
+            0 4px 16px rgba(255, 68, 68, 0.6);
+    }
+}
+
+@keyframes energyLine {
+    0%,
+    100% {
+        opacity: 0.6;
+        box-shadow: 
+            0 0 10px rgba(0, 191, 255, 0.5),
+            0 0 10px rgba(255, 68, 68, 0.5);
+    }
+
+    50% {
+        opacity: 1;
+        box-shadow: 
+            0 0 20px rgba(0, 191, 255, 0.9),
+            0 0 20px rgba(255, 68, 68, 0.9);
+    }
+}
+
+@keyframes iconDualGlow {
+    0%, 100% {
+        filter: 
+            drop-shadow(0 2px 6px rgba(0, 191, 255, 0.6))
+            drop-shadow(0 2px 6px rgba(255, 68, 68, 0.6));
+    }
+
+    50% {
+        filter: 
+            drop-shadow(0 4px 12px rgba(0, 191, 255, 0.9))
+            drop-shadow(0 4px 12px rgba(255, 68, 68, 0.9));
+    }
+}
+
+@keyframes dualEnergyPulse {
+    0%, 100% {
+        opacity: 0.3;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    50% {
+        opacity: 0.6;
+        transform: translate(-50%, -50%) scale(1.2);
+    }
+}
+
+@keyframes energyWave {
+    0%, 90%, 100% {
+        left: -100%;
+        opacity: 0;
+    }
+
+    92% {
+        left: 0%;
+        opacity: 1;
+    }
+
+    94% {
+        left: 100%;
+        opacity: 0;
+    }
+}
