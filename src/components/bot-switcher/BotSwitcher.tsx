@@ -247,6 +247,21 @@ export const BotSwitcher: React.FC = () => {
                             />
                         </label>
                     </div>
+
+                    <div className='bot-switcher__trigger bot-switcher__trigger--full'>
+                        <label className='bot-switcher__trigger-label'>
+                            <input
+                                type='checkbox'
+                                checked={switchTrigger.autoReturnToBot1}
+                                onChange={(e) => handleTriggerChange('autoReturnToBot1', e.target.checked)}
+                                disabled={isEnabled}
+                            />
+                            <span>Auto-return to Bot 1 after Bot 2 recovers loss</span>
+                        </label>
+                        <div className='bot-switcher__trigger-hint'>
+                            When enabled, automatically switches back to Bot 1 after Bot 2 wins and recovers the loss
+                        </div>
+                    </div>
                 </div>
             </div>
 

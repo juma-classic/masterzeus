@@ -20,6 +20,7 @@ interface SwitchTrigger {
     consecutiveWins: number;
     profitThreshold: number;
     lossThreshold: number;
+    autoReturnToBot1: boolean;
 }
 
 interface SwitcherStats {
@@ -32,6 +33,7 @@ interface SwitcherStats {
     consecutiveLosses: number;
     consecutiveWins: number;
     currentProfit: number;
+    profitAtSwitch: number;
 }
 
 class BotSwitcherService {
@@ -50,6 +52,7 @@ class BotSwitcherService {
         consecutiveWins: 0,
         profitThreshold: 0,
         lossThreshold: 0,
+        autoReturnToBot1: false,
     };
     
     private stats: SwitcherStats = {
@@ -62,6 +65,7 @@ class BotSwitcherService {
         consecutiveLosses: 0,
         consecutiveWins: 0,
         currentProfit: 0,
+        profitAtSwitch: 0,
     };
 
     constructor() {
@@ -184,6 +188,7 @@ class BotSwitcherService {
             consecutiveLosses: 0,
             consecutiveWins: 0,
             currentProfit: 0,
+            profitAtSwitch: 0,
         };
         console.log('📊 Bot Switcher stats reset');
     }
@@ -301,6 +306,28 @@ class BotSwitcherService {
 
             console.log(`📊 Stats: Total: ${this.stats.totalTrades}, Consecutive Losses: ${this.stats.consecutiveLosses}, Consecutive Wins: ${this.stats.consecutiveWins}, Current Profit: ${this.stats.currentProfit.toFixed(2)}`);
 
+            // Check for auto-return to Bot 1 after recovery
+            if (this.switchTrigger.autoReturnToBot1 && 
+                this.currentBot === 'bot2' && 
+                isWin && 
+                this.stats.currentProfit >= this.stats.profitAtSwitch) {
+                
+                console.log('🔄 Recovery detected! Bot 2 has recovered the loss. Auto-returning to Bot 1...');
+                console.log(`📊 Profit at switch: ${this.stats.profitAtSwitch.toFixed(2)}, Current profit: ${this.stats.currentProfit.toFixed(2)}`);
+                
+                if (this.isProcessing) {
+                    console.warn('⚠️ Switch already in progress, skipping auto-return');
+                    return;
+                }
+
+                // Switch back to Bot 1
+                this.switchBot().catch(error => {
+                    console.error('❌ Error in auto-return switchBot:', error);
+                    this.isProcessing = false;
+                });
+                return;
+            }
+
             // Check if any trigger condition is met
             const shouldSwitch = this.checkSwitchTriggers(isLoss, isWin, profit);
 
@@ -390,6 +417,12 @@ class BotSwitcherService {
             const nextBotConfig = nextBot === 'bot1' ? this.bot1 : this.bot2;
 
             console.log(`🔄 Switching from ${this.currentBot === 'bot1' ? this.bot1.name : this.bot2.name} to ${nextBotConfig.name}`);
+
+            // Record profit at switch time (for auto-return feature)
+            if (this.currentBot === 'bot1' && nextBot === 'bot2') {
+                this.stats.profitAtSwitch = this.stats.currentProfit;
+                console.log(`📊 Recording profit at switch: ${this.stats.profitAtSwitch.toFixed(2)}`);
+            }
 
             // Step 1: Stop current bot
             await this.stopCurrentBot();
