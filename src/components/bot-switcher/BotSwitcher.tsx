@@ -12,6 +12,7 @@ export const BotSwitcher: React.FC = () => {
     const [selectedBot1, setSelectedBot1] = useState<string>('');
     const [selectedBot2, setSelectedBot2] = useState<string>('');
     const [switchTrigger, setSwitchTrigger] = useState(botSwitcherService.getSwitchTrigger());
+    const [customStake, setCustomStake] = useState<string>(botSwitcherService.getCustomStake().toString());
 
     useEffect(() => {
         console.log('🎨 Bot Switcher UI component mounted');
@@ -103,6 +104,13 @@ export const BotSwitcher: React.FC = () => {
         botSwitcherService.setSwitchTrigger(newTrigger);
     };
 
+    const handleCustomStakeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setCustomStake(value);
+        const numValue = parseFloat(value) || 0;
+        botSwitcherService.setCustomStake(numValue);
+    };
+
     const bot1Name = availableBots.find(b => b.id === selectedBot1)?.name || 'Select Bot 1';
     const bot2Name = availableBots.find(b => b.id === selectedBot2)?.name || 'Select Bot 2';
 
@@ -158,6 +166,25 @@ export const BotSwitcher: React.FC = () => {
                             </option>
                         ))}
                     </select>
+                </div>
+
+                <div className='bot-switcher__selector bot-switcher__selector--stake'>
+                    <label className='bot-switcher__selector-label'>
+                        💰 Custom Stake:
+                        <span className='bot-switcher__selector-hint'>
+                            (Leave 0 to use bot's default stake)
+                        </span>
+                    </label>
+                    <input
+                        type='number'
+                        className='bot-switcher__selector-input'
+                        value={customStake}
+                        onChange={handleCustomStakeChange}
+                        disabled={isEnabled}
+                        min='0'
+                        step='0.01'
+                        placeholder='0.00'
+                    />
                 </div>
             </div>
 
@@ -256,10 +283,13 @@ export const BotSwitcher: React.FC = () => {
                                 onChange={(e) => handleTriggerChange('autoReturnToBot1', e.target.checked)}
                                 disabled={isEnabled}
                             />
-                            <span>Auto-return to Bot 1 after Bot 2 recovers loss</span>
+                            <span>🔄 Auto-return to Bot 1 after Bot 2 recovers loss</span>
+                            {switchTrigger.autoReturnToBot1 && (
+                                <span className='bot-switcher__trigger-badge'>ENABLED</span>
+                            )}
                         </label>
                         <div className='bot-switcher__trigger-hint'>
-                            When enabled, automatically switches back to Bot 1 after Bot 2 wins and recovers the loss
+                            💡 When enabled, automatically switches back to Bot 1 after Bot 2 wins and recovers the loss
                         </div>
                     </div>
                 </div>
