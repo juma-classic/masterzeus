@@ -275,23 +275,13 @@ export const BotSwitcher: React.FC = () => {
                         </label>
                     </div>
 
-                    <div className='bot-switcher__trigger bot-switcher__trigger--full'>
-                        <label className='bot-switcher__trigger-label'>
-                            <input
-                                type='checkbox'
-                                checked={switchTrigger.autoReturnToBot1}
-                                onChange={(e) => handleTriggerChange('autoReturnToBot1', e.target.checked)}
-                                disabled={isEnabled}
-                            />
-                            <span>🔄 Auto-return to Bot 1 after Bot 2 recovers loss</span>
-                            {switchTrigger.autoReturnToBot1 && (
-                                <span className='bot-switcher__trigger-badge'>ENABLED</span>
-                            )}
-                        </label>
-                        <div className='bot-switcher__trigger-hint'>
-                            💡 When enabled, automatically switches back to Bot 1 after Bot 2 wins and recovers the loss
-                        </div>
-                    </div>
+                </div>
+            </div>
+
+            <div className='bot-switcher__auto-return-info'>
+                <div className='bot-switcher__auto-return-icon'>🔄</div>
+                <div className='bot-switcher__auto-return-text'>
+                    <strong>Auto-Return Feature:</strong> When Bot 2 gets a win, it will automatically stop, switch back to Bot 1, and restart.
                 </div>
             </div>
 
@@ -367,7 +357,7 @@ export const BotSwitcher: React.FC = () => {
                     onClick={handleToggle}
                     disabled={!selectedBot1 || !selectedBot2}
                 >
-                    {isEnabled ? '⏸️ Disable Switcher' : '▶️ Enable Switcher'}
+                    {isEnabled ? '⏸️ Disable Switcher (Auto-Return Active)' : '▶️ Enable Switcher'}
                 </button>
 
                 <button

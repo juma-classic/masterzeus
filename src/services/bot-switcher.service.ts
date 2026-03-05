@@ -53,7 +53,7 @@ class BotSwitcherService {
         consecutiveWins: 0,
         profitThreshold: 0,
         lossThreshold: 0,
-        autoReturnToBot1: false,
+        autoReturnToBot1: true, // Always enabled by default
     };
     
     private stats: SwitcherStats = {
@@ -322,14 +322,13 @@ class BotSwitcherService {
 
             console.log(`📊 Stats: Total: ${this.stats.totalTrades}, Consecutive Losses: ${this.stats.consecutiveLosses}, Consecutive Wins: ${this.stats.consecutiveWins}, Current Profit: ${this.stats.currentProfit.toFixed(2)}`);
 
-            // Check for auto-return to Bot 1 after recovery
+            // Check for auto-return to Bot 1 after Bot 2 wins
             if (this.switchTrigger.autoReturnToBot1 && 
                 this.currentBot === 'bot2' && 
-                isWin && 
-                this.stats.currentProfit >= this.stats.profitAtSwitch) {
+                isWin) {
                 
-                console.log('🔄 Recovery detected! Bot 2 has recovered the loss. Auto-returning to Bot 1...');
-                console.log(`📊 Profit at switch: ${this.stats.profitAtSwitch.toFixed(2)}, Current profit: ${this.stats.currentProfit.toFixed(2)}`);
+                console.log('🔄 Bot 2 won! Auto-returning to Bot 1...');
+                console.log(`📊 Current profit: ${this.stats.currentProfit.toFixed(2)}`);
                 
                 if (this.isProcessing) {
                     console.warn('⚠️ Switch already in progress, skipping auto-return');
