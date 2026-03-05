@@ -511,35 +511,79 @@ class BotSwitcherService {
      * Save current stake from the workspace
      */
     private async saveCurrentStake(): Promise<void> {
-        try {
-            const workspace = window.Blockly?.getMainWorkspace();
-            if (!workspace) return;
+            try {
+                const workspace = window.Blockly?.getMainWorkspace();
+                if (!workspace) {
+                    console.warn('⚠️ Workspace not available for saving stake');
+                    return;
+                }
 
-            // Find stake variable in workspace
-            const stakeVar = workspace.getVariableById('Stake') || 
-                           workspace.getVariableById('Initial Stake') ||
-                           workspace.getVariableById('Amount');
-
-            if (stakeVar) {
-                // Get all blocks
                 const allBlocks = workspace.getAllBlocks();
-                
-                // Find the block that sets the stake
-                for (const block of allBlocks) {
-                    if (block.type === 'variables_set' && block.getField('VAR')?.getText() === stakeVar.name) {
-                        const valueBlock = block.getInputTargetBlock('VALUE');
-                        if (valueBlock && valueBlock.type === 'math_number') {
-                            this.currentStake = parseFloat(valueBlock.getFieldValue('NUM') || '0');
-                            console.log(`💰 Saved stake: $${this.currentStake}`);
-                            break;
+                let stakeFound = false;
+
+                // Method 1: Look for stake in variables
+                const stakeVar = workspace.getVariableById('Stake') || 
+                               workspace.getVariableById('Initial Stake') ||
+                               workspace.getVariableById('Amount');
+
+                if (stakeVar) {
+                    for (const block of allBlocks) {
+                        if (block.type === 'variables_set' && block.getField('VAR')?.getText() === stakeVar.name) {
+                            const valueBlock = block.getInputTargetBlock('VALUE');
+                            if (valueBlock && valueBlock.type === 'math_number') {
+                                this.currentStake = parseFloat(valueBlock.getFieldValue('NUM') || '0');
+                                console.log(`💰 Saved stake from variable: $${this.currentStake}`);
+                                stakeFound = true;
+                                break;
+                            }
                         }
                     }
                 }
+
+                // Method 2: Look for stake in trade_definition_tradeoptions block
+                if (!stakeFound) {
+                    for (const block of allBlocks) {
+                        if (block.type === 'trade_definition_tradeoptions') {
+                            const amountInput = block.getInput('AMOUNT');
+                            if (amountInput) {
+                                const amountBlock = block.getInputTargetBlock('AMOUNT');
+                                if (amountBlock && amountBlock.type === 'math_number') {
+                                    this.currentStake = parseFloat(amountBlock.getFieldValue('NUM') || '0');
+                                    console.log(`💰 Saved stake from trade options: $${this.currentStake}`);
+                                    stakeFound = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Method 3: Look for stake in trade_definition_multiplier block
+                if (!stakeFound) {
+                    for (const block of allBlocks) {
+                        if (block.type === 'trade_definition_multiplier') {
+                            const amountInput = block.getInput('AMOUNT');
+                            if (amountInput) {
+                                const amountBlock = block.getInputTargetBlock('AMOUNT');
+                                if (amountBlock && amountBlock.type === 'math_number') {
+                                    this.currentStake = parseFloat(amountBlock.getFieldValue('NUM') || '0');
+                                    console.log(`💰 Saved stake from multiplier: $${this.currentStake}`);
+                                    stakeFound = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (!stakeFound) {
+                    console.warn('⚠️ Could not find stake value in workspace');
+                }
+            } catch (error) {
+                console.error('❌ Error saving stake:', error);
             }
-        } catch (error) {
-            console.error('Error saving stake:', error);
         }
-    }
+
 
     /**
      * Load a bot into the builder
