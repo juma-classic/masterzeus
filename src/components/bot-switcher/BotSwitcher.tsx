@@ -11,6 +11,7 @@ export const BotSwitcher: React.FC = () => {
     const [availableBots, setAvailableBots] = useState<TStrategy[]>([]);
     const [selectedBot1, setSelectedBot1] = useState<string>('');
     const [selectedBot2, setSelectedBot2] = useState<string>('');
+    const [switchTrigger, setSwitchTrigger] = useState(botSwitcherService.getSwitchTrigger());
 
     useEffect(() => {
         console.log('🎨 Bot Switcher UI component mounted');
@@ -96,6 +97,12 @@ export const BotSwitcher: React.FC = () => {
         }
     };
 
+    const handleTriggerChange = (key: string, value: boolean | number) => {
+        const newTrigger = { ...switchTrigger, [key]: value };
+        setSwitchTrigger(newTrigger);
+        botSwitcherService.setSwitchTrigger(newTrigger);
+    };
+
     const bot1Name = availableBots.find(b => b.id === selectedBot1)?.name || 'Select Bot 1';
     const bot2Name = availableBots.find(b => b.id === selectedBot2)?.name || 'Select Bot 2';
 
@@ -154,6 +161,95 @@ export const BotSwitcher: React.FC = () => {
                 </div>
             </div>
 
+            <div className='bot-switcher__triggers'>
+                <h4 className='bot-switcher__triggers-title'>Switch Triggers</h4>
+                <div className='bot-switcher__triggers-grid'>
+                    <div className='bot-switcher__trigger'>
+                        <label className='bot-switcher__trigger-label'>
+                            <input
+                                type='checkbox'
+                                checked={switchTrigger.onLoss}
+                                onChange={(e) => handleTriggerChange('onLoss', e.target.checked)}
+                                disabled={isEnabled}
+                            />
+                            <span>Switch on Loss</span>
+                        </label>
+                    </div>
+
+                    <div className='bot-switcher__trigger'>
+                        <label className='bot-switcher__trigger-label'>
+                            <input
+                                type='checkbox'
+                                checked={switchTrigger.onWin}
+                                onChange={(e) => handleTriggerChange('onWin', e.target.checked)}
+                                disabled={isEnabled}
+                            />
+                            <span>Switch on Win</span>
+                        </label>
+                    </div>
+
+                    <div className='bot-switcher__trigger'>
+                        <label className='bot-switcher__trigger-label'>
+                            <span>After</span>
+                            <input
+                                type='number'
+                                min='0'
+                                value={switchTrigger.consecutiveLosses}
+                                onChange={(e) => handleTriggerChange('consecutiveLosses', parseInt(e.target.value) || 0)}
+                                disabled={isEnabled}
+                                className='bot-switcher__trigger-input'
+                            />
+                            <span>consecutive losses</span>
+                        </label>
+                    </div>
+
+                    <div className='bot-switcher__trigger'>
+                        <label className='bot-switcher__trigger-label'>
+                            <span>After</span>
+                            <input
+                                type='number'
+                                min='0'
+                                value={switchTrigger.consecutiveWins}
+                                onChange={(e) => handleTriggerChange('consecutiveWins', parseInt(e.target.value) || 0)}
+                                disabled={isEnabled}
+                                className='bot-switcher__trigger-input'
+                            />
+                            <span>consecutive wins</span>
+                        </label>
+                    </div>
+
+                    <div className='bot-switcher__trigger'>
+                        <label className='bot-switcher__trigger-label'>
+                            <span>Profit reaches $</span>
+                            <input
+                                type='number'
+                                min='0'
+                                step='0.01'
+                                value={switchTrigger.profitThreshold}
+                                onChange={(e) => handleTriggerChange('profitThreshold', parseFloat(e.target.value) || 0)}
+                                disabled={isEnabled}
+                                className='bot-switcher__trigger-input'
+                            />
+                        </label>
+                    </div>
+
+                    <div className='bot-switcher__trigger'>
+                        <label className='bot-switcher__trigger-label'>
+                            <span>Loss reaches $</span>
+                            <input
+                                type='number'
+                                min='0'
+                                step='0.01'
+                                value={switchTrigger.lossThreshold}
+                                onChange={(e) => handleTriggerChange('lossThreshold', parseFloat(e.target.value) || 0)}
+                                disabled={isEnabled}
+                                className='bot-switcher__trigger-input'
+                            />
+                        </label>
+                    </div>
+                </div>
+            </div>
+
             <div className='bot-switcher__bots'>
                 <div className={`bot-switcher__bot ${stats.currentBot === 'bot1' ? 'active' : ''}`}>
                     <div className='bot-switcher__bot-label'>Bot 1</div>
@@ -197,6 +293,20 @@ export const BotSwitcher: React.FC = () => {
                 <div className='bot-switcher__stat'>
                     <div className='bot-switcher__stat-label'>Switches</div>
                     <div className='bot-switcher__stat-value'>{stats.switches}</div>
+                </div>
+                <div className='bot-switcher__stat'>
+                    <div className='bot-switcher__stat-label'>Consecutive Losses</div>
+                    <div className='bot-switcher__stat-value'>{stats.consecutiveLosses}</div>
+                </div>
+                <div className='bot-switcher__stat'>
+                    <div className='bot-switcher__stat-label'>Consecutive Wins</div>
+                    <div className='bot-switcher__stat-value'>{stats.consecutiveWins}</div>
+                </div>
+                <div className='bot-switcher__stat'>
+                    <div className='bot-switcher__stat-label'>Current Profit</div>
+                    <div className={`bot-switcher__stat-value ${stats.currentProfit >= 0 ? 'profit' : 'loss'}`}>
+                        ${stats.currentProfit.toFixed(2)}
+                    </div>
                 </div>
                 <div className='bot-switcher__stat'>
                     <div className='bot-switcher__stat-label'>Last Switch</div>

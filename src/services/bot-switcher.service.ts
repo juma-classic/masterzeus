@@ -13,6 +13,15 @@ interface BotConfig {
     xml: string;
 }
 
+interface SwitchTrigger {
+    onLoss: boolean;
+    onWin: boolean;
+    consecutiveLosses: number;
+    consecutiveWins: number;
+    profitThreshold: number;
+    lossThreshold: number;
+}
+
 interface SwitcherStats {
     totalTrades: number;
     bot1Trades: number;
@@ -20,6 +29,9 @@ interface SwitcherStats {
     switches: number;
     lastSwitch: Date | null;
     currentBot: 'bot1' | 'bot2';
+    consecutiveLosses: number;
+    consecutiveWins: number;
+    currentProfit: number;
 }
 
 class BotSwitcherService {
@@ -31,6 +43,15 @@ class BotSwitcherService {
     private isProcessing: boolean = false;
     private lastProcessingTime: number = 0;
     
+    private switchTrigger: SwitchTrigger = {
+        onLoss: true,
+        onWin: false,
+        consecutiveLosses: 0,
+        consecutiveWins: 0,
+        profitThreshold: 0,
+        lossThreshold: 0,
+    };
+    
     private stats: SwitcherStats = {
         totalTrades: 0,
         bot1Trades: 0,
@@ -38,6 +59,9 @@ class BotSwitcherService {
         switches: 0,
         lastSwitch: null,
         currentBot: 'bot1',
+        consecutiveLosses: 0,
+        consecutiveWins: 0,
+        currentProfit: 0,
     };
 
     constructor() {
@@ -110,6 +134,21 @@ class BotSwitcherService {
     }
 
     /**
+     * Set switch trigger configuration
+     */
+    public setSwitchTrigger(trigger: Partial<SwitchTrigger>): void {
+        this.switchTrigger = { ...this.switchTrigger, ...trigger };
+        console.log('🎯 Switch trigger updated:', this.switchTrigger);
+    }
+
+    /**
+     * Get switch trigger configuration
+     */
+    public getSwitchTrigger(): SwitchTrigger {
+        return { ...this.switchTrigger };
+    }
+
+    /**
      * Disable bot switching
      */
     public disable(): void {
@@ -142,6 +181,9 @@ class BotSwitcherService {
             switches: 0,
             lastSwitch: null,
             currentBot: this.currentBot,
+            consecutiveLosses: 0,
+            consecutiveWins: 0,
+            currentProfit: 0,
         };
         console.log('📊 Bot Switcher stats reset');
     }
@@ -234,37 +276,99 @@ class BotSwitcherService {
 
             const profit = contract.profit || 0;
             const isLoss = profit < 0;
+            const isWin = profit > 0;
 
             console.log(`📈 Trade completed: ${isLoss ? '❌ LOSS' : '✅ WIN'} | Profit: ${profit.toFixed(2)}`);
 
-            // Only increment stats for sold contracts
+            // Update stats
             this.stats.totalTrades++;
+            this.stats.currentProfit += profit;
+            
             if (this.currentBot === 'bot1') {
                 this.stats.bot1Trades++;
             } else {
                 this.stats.bot2Trades++;
             }
-            console.log(`📊 Stats updated: Total: ${this.stats.totalTrades}, Bot1: ${this.stats.bot1Trades}, Bot2: ${this.stats.bot2Trades}`);
 
-            // Switch bot on loss
+            // Update consecutive counters
             if (isLoss) {
+                this.stats.consecutiveLosses++;
+                this.stats.consecutiveWins = 0;
+            } else if (isWin) {
+                this.stats.consecutiveWins++;
+                this.stats.consecutiveLosses = 0;
+            }
+
+            console.log(`📊 Stats: Total: ${this.stats.totalTrades}, Consecutive Losses: ${this.stats.consecutiveLosses}, Consecutive Wins: ${this.stats.consecutiveWins}, Current Profit: ${this.stats.currentProfit.toFixed(2)}`);
+
+            // Check if any trigger condition is met
+            const shouldSwitch = this.checkSwitchTriggers(isLoss, isWin, profit);
+
+            if (shouldSwitch) {
                 if (this.isProcessing) {
-                    console.warn('⚠️ Switch already in progress, skipping this loss');
+                    console.warn('⚠️ Switch already in progress, skipping this trigger');
                     return;
                 }
 
-                console.log('🔄 Loss detected! Triggering bot switch...');
-                console.log(`🔄 Will switch from ${this.currentBot === 'bot1' ? 'Bot 1' : 'Bot 2'} to ${this.currentBot === 'bot1' ? 'Bot 2' : 'Bot 1'}`);
-
+                console.log('🔄 Switch trigger activated!');
+                
                 // Don't await - let it run in background to avoid blocking
                 this.switchBot().catch(error => {
                     console.error('❌ Error in switchBot:', error);
                     this.isProcessing = false; // Reset flag on error
                 });
             } else {
-                console.log('✅ Win detected, no switch needed');
+                console.log('✅ No switch trigger met, continuing with current bot');
             }
         }
+
+    /**
+     * Check if any switch trigger conditions are met
+     */
+    private checkSwitchTriggers(isLoss: boolean, isWin: boolean, profit: number): boolean {
+        const triggers: string[] = [];
+
+        // Check simple loss trigger
+        if (this.switchTrigger.onLoss && isLoss) {
+            triggers.push('Loss detected');
+        }
+
+        // Check simple win trigger
+        if (this.switchTrigger.onWin && isWin) {
+            triggers.push('Win detected');
+        }
+
+        // Check consecutive losses
+        if (this.switchTrigger.consecutiveLosses > 0 && 
+            this.stats.consecutiveLosses >= this.switchTrigger.consecutiveLosses) {
+            triggers.push(`${this.stats.consecutiveLosses} consecutive losses`);
+        }
+
+        // Check consecutive wins
+        if (this.switchTrigger.consecutiveWins > 0 && 
+            this.stats.consecutiveWins >= this.switchTrigger.consecutiveWins) {
+            triggers.push(`${this.stats.consecutiveWins} consecutive wins`);
+        }
+
+        // Check profit threshold (switch when profit reaches target)
+        if (this.switchTrigger.profitThreshold > 0 && 
+            this.stats.currentProfit >= this.switchTrigger.profitThreshold) {
+            triggers.push(`Profit threshold reached: $${this.stats.currentProfit.toFixed(2)}`);
+        }
+
+        // Check loss threshold (switch when loss reaches limit)
+        if (this.switchTrigger.lossThreshold > 0 && 
+            this.stats.currentProfit <= -this.switchTrigger.lossThreshold) {
+            triggers.push(`Loss threshold reached: $${this.stats.currentProfit.toFixed(2)}`);
+        }
+
+        if (triggers.length > 0) {
+            console.log('🎯 Switch triggers met:', triggers.join(', '));
+            return true;
+        }
+
+        return false;
+    }
 
 
     /**
