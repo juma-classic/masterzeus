@@ -28,6 +28,7 @@ class BotSwitcherService {
     private currentBot: 'bot1' | 'bot2' = 'bot1';
     private currentStake: number = 0;
     private isProcessing: boolean = false;
+    private lastProcessingTime: number = 0;
     
     private stats: SwitcherStats = {
         totalTrades: 0,
@@ -65,6 +66,9 @@ class BotSwitcherService {
      */
     public enable(): void {
         this.isEnabled = true;
+        // Reset processing flag when enabling
+        this.isProcessing = false;
+        this.lastProcessingTime = 0;
         console.log('🔄 Bot Switcher ENABLED');
         console.log(`📊 Bot 1: ${this.bot1.name}`);
         console.log(`📊 Bot 2: ${this.bot2.name}`);
@@ -172,51 +176,62 @@ class BotSwitcherService {
      * Handle contract completion
      */
     private async onContractComplete(contract: TContractInfo): Promise<void> {
-        // Log every contract event for debugging
-        console.log('🔔 Contract event received:', {
-            is_sold: contract.is_sold,
-            profit: contract.profit,
-            contract_id: contract.id,
-            isEnabled: this.isEnabled,
-            isProcessing: this.isProcessing
-        });
+            // Log every contract event for debugging
+            console.log('🔔 Contract event received:', {
+                is_sold: contract.is_sold,
+                profit: contract.profit,
+                contract_id: contract.id,
+                isEnabled: this.isEnabled,
+                isProcessing: this.isProcessing,
+                currentBot: this.currentBot,
+                timestamp: new Date().toISOString()
+            });
 
-        if (!this.isEnabled) {
-            console.log('⏸️ Switcher is disabled, ignoring contract');
-            return;
+            if (!this.isEnabled) {
+                console.log('⏸️ Switcher is disabled, ignoring contract');
+                return;
+            }
+
+            // Check if contract is settled FIRST before checking isProcessing
+            if (!contract.is_sold) {
+                console.log('⏳ Contract not yet sold, waiting...');
+                return;
+            }
+
+            const profit = contract.profit || 0;
+            const isLoss = profit < 0;
+
+            console.log(`📈 Trade completed: ${isLoss ? '❌ LOSS' : '✅ WIN'} | Profit: ${profit.toFixed(2)}`);
+
+            // Only increment stats for sold contracts
+            this.stats.totalTrades++;
+            if (this.currentBot === 'bot1') {
+                this.stats.bot1Trades++;
+            } else {
+                this.stats.bot2Trades++;
+            }
+            console.log(`📊 Stats updated: Total: ${this.stats.totalTrades}, Bot1: ${this.stats.bot1Trades}, Bot2: ${this.stats.bot2Trades}`);
+
+            // Switch bot on loss
+            if (isLoss) {
+                if (this.isProcessing) {
+                    console.warn('⚠️ Switch already in progress, skipping this loss');
+                    return;
+                }
+
+                console.log('🔄 Loss detected! Triggering bot switch...');
+                console.log(`🔄 Will switch from ${this.currentBot === 'bot1' ? 'Bot 1' : 'Bot 2'} to ${this.currentBot === 'bot1' ? 'Bot 2' : 'Bot 1'}`);
+
+                // Don't await - let it run in background to avoid blocking
+                this.switchBot().catch(error => {
+                    console.error('❌ Error in switchBot:', error);
+                    this.isProcessing = false; // Reset flag on error
+                });
+            } else {
+                console.log('✅ Win detected, no switch needed');
+            }
         }
 
-        if (this.isProcessing) {
-            console.log('⏳ Already processing a switch, ignoring contract');
-            return;
-        }
-
-        // Check if contract is settled
-        if (!contract.is_sold) {
-            console.log('⏳ Contract not yet sold, waiting...');
-            return;
-        }
-
-        const profit = contract.profit || 0;
-        const isLoss = profit < 0;
-
-        this.stats.totalTrades++;
-        if (this.currentBot === 'bot1') {
-            this.stats.bot1Trades++;
-        } else {
-            this.stats.bot2Trades++;
-        }
-
-        console.log(`📈 Trade completed: ${isLoss ? '❌ LOSS' : '✅ WIN'} | Profit: $${profit.toFixed(2)}`);
-
-        // Switch bot on loss
-        if (isLoss) {
-            console.log('🔄 Loss detected! Triggering bot switch...');
-            await this.switchBot();
-        } else {
-            console.log('✅ Win detected, no switch needed');
-        }
-    }
 
     /**
      * Switch to the alternate bot
@@ -228,6 +243,8 @@ class BotSwitcherService {
         }
 
         this.isProcessing = true;
+        this.lastProcessingTime = Date.now();
+        console.log('🔒 Processing flag SET at', new Date().toISOString());
 
         try {
             // Determine which bot to switch to
@@ -271,8 +288,11 @@ class BotSwitcherService {
             console.log('✅ New bot started automatically');
         } catch (error) {
             console.error('❌ Error switching bot:', error);
+            console.error('❌ Error details:', error);
         } finally {
             this.isProcessing = false;
+            this.lastProcessingTime = 0;
+            console.log('🔓 Processing flag CLEARED at', new Date().toISOString());
         }
     }
 
@@ -534,6 +554,18 @@ class BotSwitcherService {
             id: 'contract.sold',
             data: 123
         });
+    }
+
+    /**
+     * Reset processing flag (for debugging stuck state)
+     */
+    public resetProcessingFlag(): void {
+        console.log('🔧 Manually resetting processing flag');
+        console.log('🔍 Was processing:', this.isProcessing);
+        console.log('🔍 Last processing time:', this.lastProcessingTime ? new Date(this.lastProcessingTime).toISOString() : 'never');
+        this.isProcessing = false;
+        this.lastProcessingTime = 0;
+        console.log('✅ Processing flag reset');
     }
 }
 

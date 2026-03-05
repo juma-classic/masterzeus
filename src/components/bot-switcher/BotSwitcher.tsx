@@ -48,6 +48,11 @@ export const BotSwitcher: React.FC = () => {
         botSwitcherService.testEventSystem();
     };
 
+    const handleResetFlag = () => {
+        console.log('🔧 Resetting processing flag from UI...');
+        botSwitcherService.resetProcessingFlag();
+    };
+
     return (
         <div className='bot-switcher'>
             <div className='bot-switcher__header'>
@@ -148,6 +153,13 @@ export const BotSwitcher: React.FC = () => {
                     onClick={handleTestEvents}
                 >
                     🧪 Test Events
+                </button>
+
+                <button
+                    className='bot-switcher__button bot-switcher__button--reset-flag'
+                    onClick={handleResetFlag}
+                >
+                    🔧 Reset Flag
                 </button>
             </div>
 
