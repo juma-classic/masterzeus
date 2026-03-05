@@ -242,7 +242,15 @@ class BotSwitcherService {
             return;
         }
         
-        // Method 2: Try clicking stop button
+        // Method 2: Try the specific Stop button ID
+        const stopButtonById = document.getElementById('db-animation__stop-button') as HTMLButtonElement;
+        if (stopButtonById && !stopButtonById.disabled) {
+            stopButtonById.click();
+            console.log('⏹️ Bot stopped via db-animation__stop-button');
+            return;
+        }
+        
+        // Method 3: Try clicking stop button by test-id
         const stopButton = document.querySelector('[data-testid="stop-button"]') as HTMLButtonElement;
         if (stopButton && !stopButton.disabled) {
             stopButton.click();
@@ -250,7 +258,7 @@ class BotSwitcherService {
             return;
         }
         
-        // Method 3: Try finding stop button by class
+        // Method 4: Try finding stop button by class
         const stopButtonByClass = document.querySelector('.run-panel__button--stop') as HTMLButtonElement;
         if (stopButtonByClass && !stopButtonByClass.disabled) {
             stopButtonByClass.click();
@@ -402,7 +410,15 @@ class BotSwitcherService {
             return;
         }
         
-        // Method 2: Try clicking the run button programmatically
+        // Method 2: Try the specific Run button ID
+        const runButtonById = document.getElementById('db-animation__run-button') as HTMLButtonElement;
+        if (runButtonById && !runButtonById.disabled) {
+            runButtonById.click();
+            console.log('▶️ Bot started via db-animation__run-button');
+            return;
+        }
+        
+        // Method 3: Try clicking the run button by test-id
         const runButton = document.querySelector('[data-testid="run-button"]') as HTMLButtonElement;
         if (runButton && !runButton.disabled) {
             runButton.click();
@@ -410,7 +426,7 @@ class BotSwitcherService {
             return;
         }
         
-        // Method 3: Try finding run button by class
+        // Method 4: Try finding run button by class
         const runButtonByClass = document.querySelector('.run-panel__button--run') as HTMLButtonElement;
         if (runButtonByClass && !runButtonByClass.disabled) {
             runButtonByClass.click();
