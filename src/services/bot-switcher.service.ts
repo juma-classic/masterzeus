@@ -8,8 +8,9 @@ import { observer } from '@/external/bot-skeleton';
 import { TContractInfo } from '@/components/shared';
 
 interface BotConfig {
+    id: string;
     name: string;
-    xmlFile: string;
+    xml: string;
 }
 
 interface SwitcherStats {
@@ -40,15 +41,17 @@ class BotSwitcherService {
     };
 
     constructor() {
-        // Default bot configuration
+        // Default bot configuration (empty until user selects)
         this.bot1 = {
-            name: 'Random LDP Differ - Elvis Trades',
-            xmlFile: 'Random LDP Differ - Elvis Trades.xml',
+            id: '',
+            name: 'Not Selected',
+            xml: '',
         };
 
         this.bot2 = {
-            name: 'States Digit Switcher',
-            xmlFile: 'States Digit Switcher.xml',
+            id: '',
+            name: 'Not Selected',
+            xml: '',
         };
 
         console.log('🔧 Bot Switcher Service initialized');
@@ -65,6 +68,11 @@ class BotSwitcherService {
      * Enable bot switching
      */
     public enable(): void {
+        if (!this.bot1.id || !this.bot2.id) {
+            console.error('❌ Cannot enable: Both bots must be selected first');
+            return;
+        }
+        
         this.isEnabled = true;
         // Reset processing flag when enabling
         this.isProcessing = false;
@@ -73,6 +81,32 @@ class BotSwitcherService {
         console.log(`📊 Bot 1: ${this.bot1.name}`);
         console.log(`📊 Bot 2: ${this.bot2.name}`);
         console.log('💡 Will switch to alternate bot on every loss');
+    }
+
+    /**
+     * Set Bot 1 configuration
+     */
+    public setBot1(id: string, name: string, xml: string): void {
+        this.bot1 = { id, name, xml };
+        console.log(`✅ Bot 1 configured: ${name}`);
+    }
+
+    /**
+     * Set Bot 2 configuration
+     */
+    public setBot2(id: string, name: string, xml: string): void {
+        this.bot2 = { id, name, xml };
+        console.log(`✅ Bot 2 configured: ${name}`);
+    }
+
+    /**
+     * Get current bot configuration
+     */
+    public getBotConfig(): { bot1: BotConfig; bot2: BotConfig } {
+        return {
+            bot1: this.bot1,
+            bot2: this.bot2,
+        };
     }
 
     /**
@@ -375,21 +409,15 @@ class BotSwitcherService {
      */
     private async loadBot(botConfig: BotConfig): Promise<void> {
         try {
-            // Fetch bot XML
-            const response = await fetch(`/${botConfig.xmlFile}`);
-            if (!response.ok) {
-                throw new Error(`Failed to load bot: ${response.statusText}`);
-            }
-
-            const xmlContent = await response.text();
-            console.log(`📥 Loaded ${botConfig.name} XML`);
+            const xmlContent = botConfig.xml;
+            console.log(`📥 Loading ${botConfig.name}`);
 
             const windowAny = window as any;
             
             // Method 1: Try using load_modal (preferred)
             if (windowAny.load_modal?.loadStrategyToBuilder) {
                 await windowAny.load_modal.loadStrategyToBuilder({
-                    id: `bot-switcher-${Date.now()}`,
+                    id: botConfig.id,
                     name: botConfig.name,
                     xml: xmlContent,
                     save_type: 'unsaved',
