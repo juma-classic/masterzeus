@@ -169,6 +169,26 @@ export const ToolboxItems = () =>
             <Category id='trade_results' name={localize('Restart trading conditions')}>
                 <Block type='after_purchase' />
                 <Block type='trade_again' />
+                <Block type='switch_bot_on_loss'>
+                    <Value name='BOT_NAME'>
+                        <Shadow type='text'>
+                            <Field name='TEXT'>My Bot.xml</Field>
+                        </Shadow>
+                    </Value>
+                </Block>
+                <Block type='switch_bot_after_losses'>
+                    <Value name='BOT_NAME'>
+                        <Shadow type='text'>
+                            <Field name='TEXT'>Recovery Bot.xml</Field>
+                        </Shadow>
+                    </Value>
+                    <Value name='LOSS_COUNT'>
+                        <Shadow type='math_number'>
+                            <Field name='NUM'>3</Field>
+                        </Shadow>
+                    </Value>
+                </Block>
+                <Block type='switch_market_on_loss' />
             </Category>
 
             <Category id='analysis' name={localize('Analysis')}>
