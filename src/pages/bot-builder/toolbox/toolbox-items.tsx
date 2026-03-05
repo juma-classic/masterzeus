@@ -189,147 +189,6 @@ export const ToolboxItems = () =>
                     </Value>
                 </Block>
                 <Block type='switch_market_on_loss' />
-                <Block type='switch_bot_on_digit_condition'>
-                    <Value name='BOT_NAME'>
-                        <Shadow type='text'>
-                            <Field name='TEXT'>Pattern Bot.xml</Field>
-                        </Shadow>
-                    </Value>
-                    <Value name='DIGIT_COUNT'>
-                        <Shadow type='math_number'>
-                            <Field name='NUM'>5</Field>
-                        </Shadow>
-                    </Value>
-                    <Value name='PATTERN'>
-                        <Shadow type='text'>
-                            <Field name='TEXT'>12345</Field>
-                        </Shadow>
-                    </Value>
-                </Block>
-                <Block type='switch_bot_on_even_odd'>
-                    <Value name='BOT_NAME'>
-                        <Shadow type='text'>
-                            <Field name='TEXT'>Even Bot.xml</Field>
-                        </Shadow>
-                    </Value>
-                    <Value name='PERCENTAGE'>
-                        <Shadow type='math_number'>
-                            <Field name='NUM'>70</Field>
-                        </Shadow>
-                    </Value>
-                    <Value name='TICK_COUNT'>
-                        <Shadow type='math_number'>
-                            <Field name='NUM'>10</Field>
-                        </Shadow>
-                    </Value>
-                </Block>
-                <Block type='switch_bot_on_over_under'>
-                    <Value name='BOT_NAME'>
-                        <Shadow type='text'>
-                            <Field name='TEXT'>Over Bot.xml</Field>
-                        </Shadow>
-                    </Value>
-                    <Value name='PERCENTAGE'>
-                        <Shadow type='math_number'>
-                            <Field name='NUM'>60</Field>
-                        </Shadow>
-                    </Value>
-                    <Value name='TICK_COUNT'>
-                        <Shadow type='math_number'>
-                            <Field name='NUM'>10</Field>
-                        </Shadow>
-                    </Value>
-                    <Value name='THRESHOLD'>
-                        <Shadow type='math_number'>
-                            <Field name='NUM'>5</Field>
-                        </Shadow>
-                    </Value>
-                </Block>
-                <Block type='switch_bot_on_match_differ'>
-                    <Value name='BOT_NAME'>
-                        <Shadow type='text'>
-                            <Field name='TEXT'>Match Bot.xml</Field>
-                        </Shadow>
-                    </Value>
-                    <Value name='PERCENTAGE'>
-                        <Shadow type='math_number'>
-                            <Field name='NUM'>60</Field>
-                        </Shadow>
-                    </Value>
-                    <Value name='TICK_COUNT'>
-                        <Shadow type='math_number'>
-                            <Field name='NUM'>10</Field>
-                        </Shadow>
-                    </Value>
-                </Block>
-                <Block type='switch_bot_on_rise_fall'>
-                    <Value name='BOT_NAME'>
-                        <Shadow type='text'>
-                            <Field name='TEXT'>Rise Bot.xml</Field>
-                        </Shadow>
-                    </Value>
-                    <Value name='PERCENTAGE'>
-                        <Shadow type='math_number'>
-                            <Field name='NUM'>60</Field>
-                        </Shadow>
-                    </Value>
-                    <Value name='TICK_COUNT'>
-                        <Shadow type='math_number'>
-                            <Field name='NUM'>10</Field>
-                        </Shadow>
-                    </Value>
-                </Block>
-                <Block type='switch_bot_on_last_digit'>
-                    <Value name='BOT_NAME'>
-                        <Shadow type='text'>
-                            <Field name='TEXT'>Digit Bot.xml</Field>
-                        </Shadow>
-                    </Value>
-                    <Value name='VALUE'>
-                        <Shadow type='math_number'>
-                            <Field name='NUM'>5</Field>
-                        </Shadow>
-                    </Value>
-                </Block>
-                <Block type='switch_bot_on_nth_digit'>
-                    <Value name='BOT_NAME'>
-                        <Shadow type='text'>
-                            <Field name='TEXT'>Nth Bot.xml</Field>
-                        </Shadow>
-                    </Value>
-                    <Value name='POSITION'>
-                        <Shadow type='math_number'>
-                            <Field name='NUM'>2</Field>
-                        </Shadow>
-                    </Value>
-                    <Value name='VALUE'>
-                        <Shadow type='math_number'>
-                            <Field name='NUM'>5</Field>
-                        </Shadow>
-                    </Value>
-                </Block>
-                <Block type='switch_bot_on_digit_frequency'>
-                    <Value name='BOT_NAME'>
-                        <Shadow type='text'>
-                            <Field name='TEXT'>Frequency Bot.xml</Field>
-                        </Shadow>
-                    </Value>
-                    <Value name='DIGIT'>
-                        <Shadow type='math_number'>
-                            <Field name='NUM'>7</Field>
-                        </Shadow>
-                    </Value>
-                    <Value name='COUNT'>
-                        <Shadow type='math_number'>
-                            <Field name='NUM'>3</Field>
-                        </Shadow>
-                    </Value>
-                    <Value name='TICK_COUNT'>
-                        <Shadow type='math_number'>
-                            <Field name='NUM'>10</Field>
-                        </Shadow>
-                    </Value>
-                </Block>
             </Category>
 
             <Category id='analysis' name={localize('Analysis')}>
@@ -540,6 +399,100 @@ export const ToolboxItems = () =>
                     <Block type='tick_analysis' />
                     <Block type='tick' />
                     <Block type='last_digit' />
+                    <Block type='digit_condition'>
+                        <Value name='DIGIT_COUNT'>
+                            <Shadow type='math_number'>
+                                <Field name='NUM'>5</Field>
+                            </Shadow>
+                        </Value>
+                        <Value name='PATTERN'>
+                            <Shadow type='text'>
+                                <Field name='TEXT'>12345</Field>
+                            </Shadow>
+                        </Value>
+                    </Block>
+                    <Block type='even_odd_percentage'>
+                        <Value name='PERCENTAGE'>
+                            <Shadow type='math_number'>
+                                <Field name='NUM'>70</Field>
+                            </Shadow>
+                        </Value>
+                        <Value name='TICK_COUNT'>
+                            <Shadow type='math_number'>
+                                <Field name='NUM'>10</Field>
+                            </Shadow>
+                        </Value>
+                    </Block>
+                    <Block type='over_under_percentage'>
+                        <Value name='PERCENTAGE'>
+                            <Shadow type='math_number'>
+                                <Field name='NUM'>60</Field>
+                            </Shadow>
+                        </Value>
+                        <Value name='TICK_COUNT'>
+                            <Shadow type='math_number'>
+                                <Field name='NUM'>10</Field>
+                            </Shadow>
+                        </Value>
+                        <Value name='THRESHOLD'>
+                            <Shadow type='math_number'>
+                                <Field name='NUM'>5</Field>
+                            </Shadow>
+                        </Value>
+                    </Block>
+                    <Block type='match_differ_percentage'>
+                        <Value name='PERCENTAGE'>
+                            <Shadow type='math_number'>
+                                <Field name='NUM'>60</Field>
+                            </Shadow>
+                        </Value>
+                        <Value name='TICK_COUNT'>
+                            <Shadow type='math_number'>
+                                <Field name='NUM'>10</Field>
+                            </Shadow>
+                        </Value>
+                    </Block>
+                    <Block type='rise_fall_percentage'>
+                        <Value name='PERCENTAGE'>
+                            <Shadow type='math_number'>
+                                <Field name='NUM'>60</Field>
+                            </Shadow>
+                        </Value>
+                        <Value name='TICK_COUNT'>
+                            <Shadow type='math_number'>
+                                <Field name='NUM'>10</Field>
+                            </Shadow>
+                        </Value>
+                    </Block>
+                    <Block type='nth_digit_check'>
+                        <Value name='POSITION'>
+                            <Shadow type='math_number'>
+                                <Field name='NUM'>2</Field>
+                            </Shadow>
+                        </Value>
+                        <Value name='VALUE'>
+                            <Shadow type='math_number'>
+                                <Field name='NUM'>5</Field>
+                            </Shadow>
+                        </Value>
+                    </Block>
+                    <Block type='digit_frequency_check'>
+                        <Value name='DIGIT'>
+                            <Shadow type='math_number'>
+                                <Field name='NUM'>7</Field>
+                            </Shadow>
+                        </Value>
+                        <Value name='COUNT'>
+                            <Shadow type='math_number'>
+                                <Field name='NUM'>3</Field>
+                            </Shadow>
+                        </Value>
+                        <Value name='TICK_COUNT'>
+                            <Shadow type='math_number'>
+                                <Field name='NUM'>10</Field>
+                            </Shadow>
+                        </Value>
+                    </Block>
                     <Block type='stat' />
                     <Block type='stat_list' />
                     <Block type='ticks' />
