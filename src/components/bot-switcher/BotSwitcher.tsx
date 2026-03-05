@@ -8,6 +8,13 @@ export const BotSwitcher: React.FC = () => {
     const [currentBot, setCurrentBot] = useState(botSwitcherService.getCurrentBotName());
 
     useEffect(() => {
+        console.log('🎨 Bot Switcher UI component mounted');
+        console.log('📊 Service status:', {
+            isActive: botSwitcherService.isActive(),
+            currentBot: botSwitcherService.getCurrentBotName(),
+            stats: botSwitcherService.getStats()
+        });
+
         // Update stats every second
         const interval = setInterval(() => {
             setStats(botSwitcherService.getStats());
@@ -34,6 +41,11 @@ export const BotSwitcher: React.FC = () => {
 
     const handleManualSwitch = async () => {
         await botSwitcherService.manualSwitch();
+    };
+
+    const handleTestEvents = () => {
+        console.log('🧪 Testing event system from UI...');
+        botSwitcherService.testEventSystem();
     };
 
     return (
@@ -129,6 +141,13 @@ export const BotSwitcher: React.FC = () => {
                     disabled={!isEnabled}
                 >
                     🔧 Manual Switch
+                </button>
+
+                <button
+                    className='bot-switcher__button bot-switcher__button--test'
+                    onClick={handleTestEvents}
+                >
+                    🧪 Test Events
                 </button>
             </div>
 

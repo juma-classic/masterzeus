@@ -50,7 +50,14 @@ class BotSwitcherService {
             xmlFile: 'States Digit Switcher.xml',
         };
 
-        this.registerContractListener();
+        console.log('🔧 Bot Switcher Service initialized');
+        console.log('🔍 Observer available:', !!observer);
+        console.log('🔍 Observer type:', typeof observer);
+        
+        // Delay registration to ensure bot system is ready
+        setTimeout(() => {
+            this.registerContractListener();
+        }, 1000);
     }
 
     /**
@@ -105,13 +112,48 @@ class BotSwitcherService {
      * Register listener for contract events
      */
     private registerContractListener(): void {
-        // Listen to bot.contract event (emitted when contract updates)
-        observer.register('bot.contract', this.onContractComplete.bind(this));
-        
-        // Also listen to contract.status for sold contracts
-        observer.register('contract.status', this.onContractStatus.bind(this));
-        
-        console.log('👂 Bot Switcher listening to contract events');
+        try {
+            // Check if observer is available
+            if (!observer) {
+                console.error('❌ Observer not available! Bot Switcher cannot listen to events.');
+                return;
+            }
+
+            console.log('🔍 Observer object:', observer);
+            console.log('🔍 Observer.register type:', typeof observer.register);
+            console.log('🔍 Observer.isRegistered:', typeof observer.isRegistered);
+
+            // Test if observer is working by registering a test event
+            observer.register('bot-switcher.test', (data: any) => {
+                console.log('✅ Test event received:', data);
+            });
+            
+            // Emit test event
+            observer.emit('bot-switcher.test', { test: 'working' });
+
+            // Listen to bot.contract event (emitted when contract updates)
+            observer.register('bot.contract', this.onContractComplete.bind(this));
+            console.log('✅ Registered bot.contract listener');
+            console.log('🔍 Is bot.contract registered?', observer.isRegistered('bot.contract'));
+            
+            // Also listen to contract.status for sold contracts
+            observer.register('contract.status', this.onContractStatus.bind(this));
+            console.log('✅ Registered contract.status listener');
+            console.log('🔍 Is contract.status registered?', observer.isRegistered('contract.status'));
+            
+            // Listen to ALL events for debugging
+            observer.register('bot.running', (data: any) => {
+                console.log('🔔 bot.running event:', data);
+            });
+            
+            observer.register('bot.stop', (data: any) => {
+                console.log('🔔 bot.stop event:', data);
+            });
+            
+            console.log('👂 Bot Switcher listening to contract events');
+        } catch (error) {
+            console.error('❌ Error registering contract listeners:', error);
+        }
     }
 
     /**
@@ -462,6 +504,31 @@ class BotSwitcherService {
         
         console.log('🔧 Manual bot switch triggered');
         await this.switchBot();
+    }
+
+    /**
+     * Test event system (for debugging)
+     */
+    public testEventSystem(): void {
+        console.log('🧪 Testing event system...');
+        console.log('🔍 Observer:', observer);
+        console.log('🔍 Is bot.contract registered?', observer.isRegistered('bot.contract'));
+        console.log('🔍 Is contract.status registered?', observer.isRegistered('contract.status'));
+        
+        // Try emitting a test contract event
+        console.log('🧪 Emitting test bot.contract event...');
+        observer.emit('bot.contract', {
+            is_sold: true,
+            profit: -1.5,
+            id: 'test-123',
+            accountID: 'test'
+        });
+        
+        console.log('🧪 Emitting test contract.status event...');
+        observer.emit('contract.status', {
+            id: 'contract.sold',
+            data: 123
+        });
     }
 }
 
