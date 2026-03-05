@@ -64,7 +64,7 @@ export const BotSwitcher: React.FC = () => {
             </div>
 
             <div className='bot-switcher__description'>
-                Automatically switches between two bots when a loss occurs. Bot stops after switching - click RUN to continue with the new bot.
+                Automatically switches between two bots when a loss occurs. Bot stops, switches, and automatically restarts with the new bot.
             </div>
 
             <div className='bot-switcher__bots'>
@@ -155,7 +155,7 @@ export const BotSwitcher: React.FC = () => {
                 <div className='bot-switcher__info-icon'>💡</div>
                 <div className='bot-switcher__info-text'>
                     <strong>How it works:</strong> When enabled, the system monitors every trade. On a loss, it
-                    automatically stops the current bot, loads the alternate bot with the same stake, and waits for you to click RUN to continue trading.
+                    automatically stops the current bot, loads the alternate bot with the same stake, and automatically clicks RUN to continue trading seamlessly.
                 </div>
             </div>
         </div>

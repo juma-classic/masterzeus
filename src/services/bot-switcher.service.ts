@@ -241,7 +241,7 @@ class BotSwitcherService {
             console.log('⏹️ Current bot stopped');
 
             // Step 2: Wait for bot to fully stop
-            await this.delay(1000);
+            await this.delay(1500);
 
             // Step 3: Save current stake before switching
             await this.saveCurrentStake();
@@ -250,7 +250,7 @@ class BotSwitcherService {
             await this.loadBot(nextBotConfig);
 
             // Step 5: Wait for bot to load
-            await this.delay(1000);
+            await this.delay(1500);
 
             // Step 6: Restore stake to the new bot
             await this.restoreStake();
@@ -263,7 +263,12 @@ class BotSwitcherService {
 
             console.log(`✅ Successfully switched to ${nextBotConfig.name}`);
             console.log(`📊 Total switches: ${this.stats.switches}`);
-            console.log('⏸️ Bot is ready - Click RUN to start trading with the new bot');
+            
+            // Step 7: Wait a bit more then auto-start the new bot
+            await this.delay(1000);
+            console.log('▶️ Auto-starting the new bot...');
+            await this.startBot();
+            console.log('✅ New bot started automatically');
         } catch (error) {
             console.error('❌ Error switching bot:', error);
         } finally {
