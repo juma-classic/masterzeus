@@ -105,17 +105,55 @@ class BotSwitcherService {
      * Register listener for contract events
      */
     private registerContractListener(): void {
+        // Listen to bot.contract event (emitted when contract updates)
         observer.register('bot.contract', this.onContractComplete.bind(this));
+        
+        // Also listen to contract.status for sold contracts
+        observer.register('contract.status', this.onContractStatus.bind(this));
+        
+        console.log('👂 Bot Switcher listening to contract events');
+    }
+
+    /**
+     * Handle contract status events (more reliable for detecting sold contracts)
+     */
+    private async onContractStatus(status: any): Promise<void> {
+        console.log('📡 Contract status event:', status);
+        
+        // Only care about sold contracts
+        if (status?.id === 'contract.sold') {
+            console.log('✅ Contract sold event detected');
+        }
     }
 
     /**
      * Handle contract completion
      */
     private async onContractComplete(contract: TContractInfo): Promise<void> {
-        if (!this.isEnabled || this.isProcessing) return;
+        // Log every contract event for debugging
+        console.log('🔔 Contract event received:', {
+            is_sold: contract.is_sold,
+            profit: contract.profit,
+            contract_id: contract.id,
+            isEnabled: this.isEnabled,
+            isProcessing: this.isProcessing
+        });
+
+        if (!this.isEnabled) {
+            console.log('⏸️ Switcher is disabled, ignoring contract');
+            return;
+        }
+
+        if (this.isProcessing) {
+            console.log('⏳ Already processing a switch, ignoring contract');
+            return;
+        }
 
         // Check if contract is settled
-        if (!contract.is_sold) return;
+        if (!contract.is_sold) {
+            console.log('⏳ Contract not yet sold, waiting...');
+            return;
+        }
 
         const profit = contract.profit || 0;
         const isLoss = profit < 0;
@@ -131,7 +169,10 @@ class BotSwitcherService {
 
         // Switch bot on loss
         if (isLoss) {
+            console.log('🔄 Loss detected! Triggering bot switch...');
             await this.switchBot();
+        } else {
+            console.log('✅ Win detected, no switch needed');
         }
     }
 
