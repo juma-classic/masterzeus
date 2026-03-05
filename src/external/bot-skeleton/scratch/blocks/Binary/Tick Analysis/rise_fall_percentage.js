@@ -7,7 +7,11 @@ window.Blockly.Blocks.rise_fall_percentage = {
     },
     definition() {
         return {
-            message0: localize('%1% of last %2 ticks are %3'),
+            message0: localize('{{ percentage }}% of last {{ count }} ticks are {{ direction }}', { 
+                percentage: '%1', 
+                count: '%2', 
+                direction: '%3' 
+            }),
             args0: [
                 {
                     type: 'input_value',

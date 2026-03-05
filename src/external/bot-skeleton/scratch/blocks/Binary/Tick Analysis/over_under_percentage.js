@@ -7,7 +7,12 @@ window.Blockly.Blocks.over_under_percentage = {
     },
     definition() {
         return {
-            message0: localize('%1% of last %2 ticks are %3 %4'),
+            message0: localize('{{ percentage }}% of last {{ count }} ticks are {{ comparison }} {{ threshold }}', { 
+                percentage: '%1', 
+                count: '%2', 
+                comparison: '%3',
+                threshold: '%4'
+            }),
             args0: [
                 {
                     type: 'input_value',

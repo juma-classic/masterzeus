@@ -7,7 +7,11 @@ window.Blockly.Blocks.match_differ_percentage = {
     },
     definition() {
         return {
-            message0: localize('%1% of last %2 ticks %3 prediction'),
+            message0: localize('{{ percentage }}% of last {{ count }} ticks {{ type }} prediction', { 
+                percentage: '%1', 
+                count: '%2', 
+                type: '%3' 
+            }),
             args0: [
                 {
                     type: 'input_value',

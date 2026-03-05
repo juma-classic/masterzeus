@@ -7,7 +7,12 @@ window.Blockly.Blocks.digit_frequency_check = {
     },
     definition() {
         return {
-            message0: localize('Digit %1 appears %2 %3 times in last %4 ticks'),
+            message0: localize('Digit {{ digit }} appears {{ comparison }} {{ count }} times in last {{ tick_count }} ticks', { 
+                digit: '%1', 
+                comparison: '%2', 
+                count: '%3',
+                tick_count: '%4'
+            }),
             args0: [
                 {
                     type: 'input_value',

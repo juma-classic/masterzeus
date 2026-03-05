@@ -7,7 +7,11 @@ window.Blockly.Blocks.digit_condition = {
     },
     definition() {
         return {
-            message0: localize('Last %1 digits %2 %3'),
+            message0: localize('Last {{ count }} digits {{ condition }} {{ pattern }}', { 
+                count: '%1', 
+                condition: '%2', 
+                pattern: '%3' 
+            }),
             args0: [
                 {
                     type: 'input_value',

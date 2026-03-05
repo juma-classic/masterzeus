@@ -7,7 +7,11 @@ window.Blockly.Blocks.nth_digit_check = {
     },
     definition() {
         return {
-            message0: localize('%1 last digit is %2 %3'),
+            message0: localize('{{ position }} last digit is {{ comparison }} {{ value }}', { 
+                position: '%1', 
+                comparison: '%2', 
+                value: '%3' 
+            }),
             args0: [
                 {
                     type: 'input_value',

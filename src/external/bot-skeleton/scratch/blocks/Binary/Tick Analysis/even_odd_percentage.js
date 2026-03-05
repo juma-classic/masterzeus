@@ -7,7 +7,11 @@ window.Blockly.Blocks.even_odd_percentage = {
     },
     definition() {
         return {
-            message0: localize('%1% of last %2 ticks are %3'),
+            message0: localize('{{ percentage }}% of last {{ count }} ticks are {{ type }}', { 
+                percentage: '%1', 
+                count: '%2', 
+                type: '%3' 
+            }),
             args0: [
                 {
                     type: 'input_value',
