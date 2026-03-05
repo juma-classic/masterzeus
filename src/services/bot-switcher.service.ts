@@ -153,26 +153,31 @@ class BotSwitcherService {
 
             console.log(`🔄 Switching from ${this.currentBot === 'bot1' ? this.bot1.name : this.bot2.name} to ${nextBotConfig.name}`);
 
-            // Stop current bot
+            // Step 1: Stop current bot
             await this.stopCurrentBot();
+            console.log('⏹️ Current bot stopped');
 
-            // Small delay to ensure clean stop
-            await this.delay(500);
+            // Step 2: Wait for bot to fully stop
+            await this.delay(1000);
 
-            // Save current stake before switching
+            // Step 3: Save current stake before switching
             await this.saveCurrentStake();
 
-            // Load the new bot
+            // Step 4: Load the new bot XML into workspace
             await this.loadBot(nextBotConfig);
 
-            // Restore stake to the new bot
+            // Step 5: Wait for bot to load
+            await this.delay(1000);
+
+            // Step 6: Restore stake to the new bot
             await this.restoreStake();
 
-            // Small delay before starting
+            // Step 7: Wait before starting
             await this.delay(500);
 
-            // Start the new bot
+            // Step 8: Start the new bot
             await this.startBot();
+            console.log('▶️ New bot started');
 
             // Update current bot
             this.currentBot = nextBot;
@@ -195,10 +200,30 @@ class BotSwitcherService {
     private async stopCurrentBot(): Promise<void> {
         const windowAny = window as any;
         
+        // Method 1: Try DBot.stopBot
         if (windowAny.DBot?.stopBot) {
             windowAny.DBot.stopBot();
-            console.log('⏹️ Current bot stopped');
+            console.log('⏹️ Bot stopped via DBot.stopBot');
+            return;
         }
+        
+        // Method 2: Try clicking stop button
+        const stopButton = document.querySelector('[data-testid="stop-button"]') as HTMLButtonElement;
+        if (stopButton && !stopButton.disabled) {
+            stopButton.click();
+            console.log('⏹️ Bot stopped via stop button click');
+            return;
+        }
+        
+        // Method 3: Try finding stop button by class
+        const stopButtonByClass = document.querySelector('.run-panel__button--stop') as HTMLButtonElement;
+        if (stopButtonByClass && !stopButtonByClass.disabled) {
+            stopButtonByClass.click();
+            console.log('⏹️ Bot stopped via stop button class');
+            return;
+        }
+        
+        console.warn('⚠️ Could not find method to stop bot');
     }
 
     /**
@@ -249,9 +274,9 @@ class BotSwitcherService {
             const xmlContent = await response.text();
             console.log(`📥 Loaded ${botConfig.name} XML`);
 
-            // Load into builder using load_modal
             const windowAny = window as any;
             
+            // Method 1: Try using load_modal (preferred)
             if (windowAny.load_modal?.loadStrategyToBuilder) {
                 await windowAny.load_modal.loadStrategyToBuilder({
                     id: `bot-switcher-${Date.now()}`,
@@ -260,10 +285,34 @@ class BotSwitcherService {
                     save_type: 'unsaved',
                     timestamp: Date.now(),
                 });
-                console.log(`✅ ${botConfig.name} loaded into builder`);
-            } else {
-                throw new Error('load_modal.loadStrategyToBuilder not available');
+                console.log(`✅ ${botConfig.name} loaded via load_modal`);
+                return;
             }
+            
+            // Method 2: Try direct Blockly workspace loading
+            if (window.Blockly) {
+                const workspace = window.Blockly.getMainWorkspace();
+                if (workspace) {
+                    // Clear existing workspace
+                    workspace.clear();
+                    console.log('🧹 Workspace cleared');
+                    
+                    // Load new XML
+                    const xml = window.Blockly.Xml.textToDom(xmlContent);
+                    window.Blockly.Xml.domToWorkspace(xml, workspace);
+                    console.log(`✅ ${botConfig.name} loaded via Blockly workspace`);
+                    return;
+                }
+            }
+            
+            // Method 3: Try using updateWorkspaceName
+            if (windowAny.updateWorkspaceName) {
+                windowAny.updateWorkspaceName(xmlContent);
+                console.log(`✅ ${botConfig.name} loaded via updateWorkspaceName`);
+                return;
+            }
+            
+            throw new Error('No method available to load bot into workspace');
         } catch (error) {
             console.error(`Error loading bot ${botConfig.name}:`, error);
             throw error;
@@ -311,10 +360,30 @@ class BotSwitcherService {
     private async startBot(): Promise<void> {
         const windowAny = window as any;
         
+        // Method 1: Try DBot.runBot
         if (windowAny.DBot?.runBot) {
             windowAny.DBot.runBot();
-            console.log('▶️ New bot started');
+            console.log('▶️ Bot started via DBot.runBot');
+            return;
         }
+        
+        // Method 2: Try clicking the run button programmatically
+        const runButton = document.querySelector('[data-testid="run-button"]') as HTMLButtonElement;
+        if (runButton && !runButton.disabled) {
+            runButton.click();
+            console.log('▶️ Bot started via run button click');
+            return;
+        }
+        
+        // Method 3: Try finding run button by class
+        const runButtonByClass = document.querySelector('.run-panel__button--run') as HTMLButtonElement;
+        if (runButtonByClass && !runButtonByClass.disabled) {
+            runButtonByClass.click();
+            console.log('▶️ Bot started via run button class');
+            return;
+        }
+        
+        console.warn('⚠️ Could not find method to start bot');
     }
 
     /**
