@@ -23,7 +23,7 @@ const ModernLoader: React.FC<ModernLoaderProps> = ({ onFinish }) => {
         'Navigate markets with confidence',
         'Fast execution, reliable returns',
         'Growing your portfolio steadily',
-        'ZEUS TRADING - Your path to financial freedom',
+        'Tradersden - Your path to financial freedom',
         'Elevate your trading experience',
     ];
 
@@ -244,7 +244,7 @@ const ModernLoader: React.FC<ModernLoaderProps> = ({ onFinish }) => {
             { duration: 900, text: 'Activating Trading Signals', progress: 70 },
             { duration: 700, text: 'Loading Strategies', progress: 85 },
             { duration: 600, text: 'Preparing Dashboard', progress: 95 },
-            { duration: 500, text: 'Welcome to ZEUS TRADING', progress: 100 },
+            { duration: 500, text: 'Welcome to Tradersden', progress: 100 },
         ];
 
         let currentPhase = 0;

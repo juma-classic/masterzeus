@@ -1,8 +1,8 @@
 {
-    "name": "ZEUS TRADING",
-    "short_name": "ZEUS TRADING",
+    "name": "Tradersden",
+    "short_name": "Tradersden",
     "theme_color": "#14b8a6",
-    "description": "Professional automated trading platform - Reliable trading tools by ZEUS TRADING.",
+    "description": "Professional automated trading platform - Reliable trading tools by Tradersden.",
     "background_color": "#0f1419",
     "display": "standalone",
     "start_url": "/",
