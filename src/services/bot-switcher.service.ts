@@ -98,7 +98,7 @@ class BotSwitcherService {
      */
     public setCustomStake(stake: number): void {
         this.customStake = stake;
-        console.log(`💰 Custom stake set to: ${stake}`);
+        console.log(`Custom stake set to: ${stake}`);
     }
 
     /**
@@ -113,7 +113,7 @@ class BotSwitcherService {
      */
     public enable(): void {
         if (!this.bot1.id || !this.bot2.id) {
-            console.error('❌ Cannot enable: Both bots must be selected first');
+            console.error('Cannot enable: Both bots must be selected first');
             return;
         }
         
@@ -121,10 +121,10 @@ class BotSwitcherService {
         // Reset processing flag when enabling
         this.isProcessing = false;
         this.lastProcessingTime = 0;
-        console.log('🔄 Bot Switcher ENABLED');
-        console.log(`📊 Bot 1: ${this.bot1.name}`);
-        console.log(`📊 Bot 2: ${this.bot2.name}`);
-        console.log('💡 Will switch to alternate bot on every loss');
+        console.log('Bot Switcher ENABLED');
+        console.log(`Bot 1: ${this.bot1.name}`);
+        console.log(`Bot 2: ${this.bot2.name}`);
+        console.log('Will switch to alternate bot on every loss');
     }
 
     /**
@@ -132,7 +132,7 @@ class BotSwitcherService {
      */
     public setBot1(id: string, name: string, xml: string): void {
         this.bot1 = { id, name, xml };
-        console.log(`✅ Bot 1 configured: ${name}`);
+        console.log(`Bot 1 configured: ${name}`);
     }
 
     /**
@@ -299,7 +299,7 @@ class BotSwitcherService {
             const isLoss = profit < 0;
             const isWin = profit > 0;
 
-            console.log(`📈 Trade completed: ${isLoss ? '❌ LOSS' : '✅ WIN'} | Profit: ${profit.toFixed(2)}`);
+            console.log(`Trade completed: ${isLoss ? 'LOSS' : 'WIN'} | Profit: ${profit.toFixed(2)}`);
 
             // Update stats
             this.stats.totalTrades++;
@@ -320,24 +320,24 @@ class BotSwitcherService {
                 this.stats.consecutiveLosses = 0;
             }
 
-            console.log(`📊 Stats: Total: ${this.stats.totalTrades}, Consecutive Losses: ${this.stats.consecutiveLosses}, Consecutive Wins: ${this.stats.consecutiveWins}, Current Profit: ${this.stats.currentProfit.toFixed(2)}`);
+            console.log(`Stats: Total: ${this.stats.totalTrades}, Consecutive Losses: ${this.stats.consecutiveLosses}, Consecutive Wins: ${this.stats.consecutiveWins}, Current Profit: ${this.stats.currentProfit.toFixed(2)}`);
 
             // Check for auto-return to Bot 1 after Bot 2 wins
             if (this.switchTrigger.autoReturnToBot1 && 
                 this.currentBot === 'bot2' && 
                 isWin) {
                 
-                console.log('🔄 Bot 2 won! Auto-returning to Bot 1...');
-                console.log(`📊 Current profit: ${this.stats.currentProfit.toFixed(2)}`);
+                console.log('Bot 2 won! Auto-returning to Bot 1...');
+                console.log(`Current profit: ${this.stats.currentProfit.toFixed(2)}`);
                 
                 if (this.isProcessing) {
-                    console.warn('⚠️ Switch already in progress, skipping auto-return');
+                    console.warn('Switch already in progress, skipping auto-return');
                     return;
                 }
 
                 // Switch back to Bot 1
                 this.switchBot().catch(error => {
-                    console.error('❌ Error in auto-return switchBot:', error);
+                    console.error('Error in auto-return switchBot:', error);
                     this.isProcessing = false;
                 });
                 return;
@@ -348,19 +348,19 @@ class BotSwitcherService {
 
             if (shouldSwitch) {
                 if (this.isProcessing) {
-                    console.warn('⚠️ Switch already in progress, skipping this trigger');
+                    console.warn('Switch already in progress, skipping this trigger');
                     return;
                 }
 
-                console.log('🔄 Switch trigger activated!');
+                console.log('Switch trigger activated!');
                 
                 // Don't await - let it run in background to avoid blocking
                 this.switchBot().catch(error => {
-                    console.error('❌ Error in switchBot:', error);
+                    console.error('Error in switchBot:', error);
                     this.isProcessing = false; // Reset flag on error
                 });
             } else {
-                console.log('✅ No switch trigger met, continuing with current bot');
+                console.log('No switch trigger met, continuing with current bot');
             }
         }
 
