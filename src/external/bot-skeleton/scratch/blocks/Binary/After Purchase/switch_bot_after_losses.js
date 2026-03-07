@@ -52,9 +52,17 @@ window.Blockly.Blocks.switch_bot_after_losses = {
     },
 };
 
-window.Blockly.JavaScript.switch_bot_after_losses = block => {
-    const bot_name = window.Blockly.JavaScript.valueToCode(block, 'BOT_NAME', window.Blockly.JavaScript.ORDER_ATOMIC) || '""';
-    const loss_count = window.Blockly.JavaScript.valueToCode(block, 'LOSS_COUNT', window.Blockly.JavaScript.ORDER_ATOMIC) || '3';
+window.Blockly.JavaScript.javascriptGenerator.forBlock.switch_bot_after_losses = block => {
+    const bot_name = window.Blockly.JavaScript.javascriptGenerator.valueToCode(
+        block,
+        'BOT_NAME',
+        window.Blockly.JavaScript.javascriptGenerator.ORDER_ATOMIC
+    ) || '""';
+    const loss_count = window.Blockly.JavaScript.javascriptGenerator.valueToCode(
+        block,
+        'LOSS_COUNT',
+        window.Blockly.JavaScript.javascriptGenerator.ORDER_ATOMIC
+    ) || '3';
     
     const code = `
     (function() {
@@ -78,5 +86,5 @@ window.Blockly.JavaScript.switch_bot_after_losses = block => {
     })();
     `;
     
-    return code;
+    return [code, window.Blockly.JavaScript.javascriptGenerator.ORDER_ATOMIC];
 };

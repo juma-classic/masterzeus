@@ -54,7 +54,7 @@ window.Blockly.Blocks.switch_market_on_loss = {
     },
 };
 
-window.Blockly.JavaScript.switch_market_on_loss = block => {
+window.Blockly.JavaScript.javascriptGenerator.forBlock.switch_market_on_loss = block => {
     const market = block.getFieldValue('MARKET');
     
     const code = `
@@ -68,5 +68,5 @@ window.Blockly.JavaScript.switch_market_on_loss = block => {
     })();
     `;
     
-    return code;
+    return [code, window.Blockly.JavaScript.javascriptGenerator.ORDER_ATOMIC];
 };

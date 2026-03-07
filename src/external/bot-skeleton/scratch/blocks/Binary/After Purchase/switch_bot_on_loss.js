@@ -48,8 +48,12 @@ window.Blockly.Blocks.switch_bot_on_loss = {
     },
 };
 
-window.Blockly.JavaScript.switch_bot_on_loss = block => {
-    const bot_name = window.Blockly.JavaScript.valueToCode(block, 'BOT_NAME', window.Blockly.JavaScript.ORDER_ATOMIC) || '""';
+window.Blockly.JavaScript.javascriptGenerator.forBlock.switch_bot_on_loss = block => {
+    const bot_name = window.Blockly.JavaScript.javascriptGenerator.valueToCode(
+        block,
+        'BOT_NAME',
+        window.Blockly.JavaScript.javascriptGenerator.ORDER_ATOMIC
+    ) || '""';
     
     const code = `
     (function() {
@@ -63,5 +67,5 @@ window.Blockly.JavaScript.switch_bot_on_loss = block => {
     })();
     `;
     
-    return code;
+    return [code, window.Blockly.JavaScript.javascriptGenerator.ORDER_ATOMIC];
 };
