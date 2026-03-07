@@ -231,7 +231,7 @@
         border: 2px solid rgba(100, 100, 100, 0.3);
         border-radius: 12px;
         color: rgba(255, 255, 255, 0.85) !important;
-        font-size: 11px;
+        font-size: 13px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -272,8 +272,8 @@
 
         // Icon styling with bull/bear theme
         svg {
-            width: 24px;
-            height: 24px;
+            width: 28px;
+            height: 28px;
             transition: all 0.3s ease;
             filter: drop-shadow(0 2px 4px rgba(0, 191, 255, 0.3));
             color: #00BFFF !important;
