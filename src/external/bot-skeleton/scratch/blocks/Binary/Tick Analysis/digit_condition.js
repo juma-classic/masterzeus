@@ -79,7 +79,7 @@ window.Blockly.JavaScript.javascriptGenerator.forBlock.digit_condition = block =
             case 'all_same': return lastDigits.every(d => d === lastDigits[0]);
             case 'all_rising': return lastDigits.every((d, i) => i === 0 || d > lastDigits[i-1]);
             case 'all_falling': return lastDigits.every((d, i) => i === 0 || d < lastDigits[i-1]);
-            case 'match_pattern': return lastDigits.join('') === ${pattern}.toString();
+            case 'match_pattern': return lastDigits.join('') === String(${pattern});
             default: return false;
         }
     })()`;
