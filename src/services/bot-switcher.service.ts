@@ -233,10 +233,25 @@ class BotSwitcherService {
         if (observer) {
             console.log('🔍 bot.contract registered:', observer.isRegistered('bot.contract'));
             console.log('🔍 contract.status registered:', observer.isRegistered('contract.status'));
+            
+            // Try to re-register if not registered
+            if (!observer.isRegistered('bot.contract')) {
+                console.warn('⚠️ bot.contract not registered! Re-registering...');
+                this.registerContractListener();
+            }
         }
         console.log('🔍 Current stats:', this.getStats());
         console.log('🔍 API connected:', this.isApiConnected);
         console.log('🔍 Last API response:', new Date(this.lastApiResponse).toISOString());
+        
+        // Test emit
+        console.log('🧪 Testing manual event emit...');
+        observer.emit('bot.contract', {
+            id: 'test-123',
+            is_sold: true,
+            profit: 5.00,
+            accountID: 'test'
+        });
     }
 
     // ==================== CONTRACT MONITORING ====================
