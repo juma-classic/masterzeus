@@ -422,8 +422,9 @@ class BotSwitcherService {
             triggers.push('Loss detected');
         }
 
-        if (this.switchTrigger.onWin && isWin) {
-            triggers.push('Win detected');
+        // Switch on Win only works for Bot 2
+        if (this.switchTrigger.onWin && isWin && this.currentBot === 'bot2') {
+            triggers.push('Win detected (Bot 2 only)');
         }
 
         if (this.switchTrigger.consecutiveLosses > 0 && 

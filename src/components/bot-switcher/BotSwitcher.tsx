@@ -68,11 +68,6 @@ export const BotSwitcher: React.FC = () => {
         await botSwitcherService.manualSwitch();
     };
 
-    const handleTestEvents = () => {
-        console.log('🧪 Testing event system from UI...');
-        botSwitcherService.testEventSystem();
-    };
-
     const handleResetFlag = () => {
         console.log('🔧 Resetting processing flag from UI...');
         botSwitcherService.resetProcessingFlag();
@@ -190,6 +185,9 @@ export const BotSwitcher: React.FC = () => {
 
             <div className='bot-switcher__triggers'>
                 <h4 className='bot-switcher__triggers-title'>Switch Triggers</h4>
+                <div className='bot-switcher__triggers-info'>
+                    💡 Note: "Switch on Win" only triggers when Bot 2 wins (returns to Bot 1)
+                </div>
                 <div className='bot-switcher__triggers-grid'>
                     <div className='bot-switcher__trigger'>
                         <label className='bot-switcher__trigger-label'>
@@ -211,7 +209,7 @@ export const BotSwitcher: React.FC = () => {
                                 onChange={(e) => handleTriggerChange('onWin', e.target.checked)}
                                 disabled={isEnabled}
                             />
-                            <span>Switch on Win</span>
+                            <span>Switch on Win (Bot 2 only)</span>
                         </label>
                     </div>
 
@@ -374,13 +372,6 @@ export const BotSwitcher: React.FC = () => {
                     disabled={!isEnabled}
                 >
                     🔧 Manual Switch
-                </button>
-
-                <button
-                    className='bot-switcher__button bot-switcher__button--test'
-                    onClick={handleTestEvents}
-                >
-                    🧪 Test Events
                 </button>
 
                 <button

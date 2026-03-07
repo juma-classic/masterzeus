@@ -221,6 +221,17 @@
         letter-spacing: 0.5px;
     }
 
+    &__triggers-info {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.8);
+        background: rgba(255, 193, 7, 0.15);
+        border-left: 3px solid #ffc107;
+        padding: 10px 12px;
+        margin-bottom: 16px;
+        border-radius: 6px;
+        line-height: 1.5;
+    }
+
     &__triggers-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
