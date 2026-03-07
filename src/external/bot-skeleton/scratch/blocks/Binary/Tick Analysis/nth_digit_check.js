@@ -72,7 +72,8 @@ window.Blockly.JavaScript.javascriptGenerator.forBlock.nth_digit_check = block =
     ) || '5';
     
     const code = `(function() {
-        const nthDigit = Bot.getNthLastDigit(${position});
+        const digitList = Bot.getLastDigitList();
+        const nthDigit = digitList[digitList.length - ${position}];
         switch('${comparison}') {
             case 'equals': return nthDigit === ${value};
             case 'not_equals': return nthDigit !== ${value};

@@ -60,8 +60,8 @@ window.Blockly.JavaScript.switch_bot_after_losses = block => {
     (function() {
         if (!Bot.consecutiveLosses) Bot.consecutiveLosses = 0;
         
-        const lastProfit = Bot.getLastProfit();
-        if (lastProfit < 0) {
+        const result = Bot.readDetails(10);
+        if (result === 'loss') {
             Bot.consecutiveLosses++;
             console.log('📉 Consecutive losses: ' + Bot.consecutiveLosses);
             
@@ -72,7 +72,7 @@ window.Blockly.JavaScript.switch_bot_after_losses = block => {
                 Bot.loadStrategy(${bot_name});
                 Bot.start();
             }
-        } else {
+        } else if (result === 'win') {
             Bot.consecutiveLosses = 0;
         }
     })();

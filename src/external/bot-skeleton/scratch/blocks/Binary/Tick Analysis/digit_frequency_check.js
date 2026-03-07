@@ -82,7 +82,7 @@ window.Blockly.JavaScript.javascriptGenerator.forBlock.digit_frequency_check = b
     ) || '10';
     
     const code = `(function() {
-        const lastDigits = Bot.getLastNDigits(${tick_count});
+        const lastDigits = Bot.getLastDigitList().slice(-${tick_count});
         const frequency = lastDigits.filter(d => d === ${digit}).length;
         switch('${comparison}') {
             case 'equals': return frequency === ${count};

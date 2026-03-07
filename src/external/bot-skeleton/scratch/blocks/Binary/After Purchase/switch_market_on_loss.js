@@ -59,8 +59,8 @@ window.Blockly.JavaScript.switch_market_on_loss = block => {
     
     const code = `
     (function() {
-        const lastProfit = Bot.getLastProfit();
-        if (lastProfit < 0) {
+        const result = Bot.readDetails(10);
+        if (result === 'loss') {
             console.log('🔄 Loss detected, switching to market: ${market}');
             Bot.setMarket('${market}');
             Bot.restart();

@@ -68,7 +68,7 @@ window.Blockly.JavaScript.javascriptGenerator.forBlock.even_odd_percentage = blo
     const type = block.getFieldValue('TYPE');
     
     const code = `(function() {
-        const lastDigits = Bot.getLastNDigits(${tick_count});
+        const lastDigits = Bot.getLastDigitList().slice(-${tick_count});
         const targetCount = lastDigits.filter(d => d % 2 ${type === 'even' ? '===' : '!=='} 0).length;
         const actualPercentage = (targetCount / lastDigits.length) * 100;
         return actualPercentage >= ${percentage};

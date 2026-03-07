@@ -79,7 +79,9 @@ window.Blockly.JavaScript.javascriptGenerator.forBlock.over_under_percentage = b
     ) || '5';
     
     const code = `(function() {
-        const lastDigits = Bot.getLastNDigits(${tick_count});
+        const allDigits = Bot.getLastDigitList();
+        const lastDigits = allDigits.slice(-${tick_count});
+        if (lastDigits.length === 0) return false;
         const matchingCount = lastDigits.filter(d => d ${comparison === 'over' ? '>' : '<'} ${threshold}).length;
         const actualPercentage = (matchingCount / lastDigits.length) * 100;
         return actualPercentage >= ${percentage};

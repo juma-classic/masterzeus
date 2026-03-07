@@ -72,7 +72,7 @@ window.Blockly.JavaScript.javascriptGenerator.forBlock.digit_condition = block =
     ) || '""';
     
     const code = `(function() {
-        const lastDigits = Bot.getLastNDigits(${digit_count});
+        const lastDigits = Bot.getLastDigitList().slice(-${digit_count});
         switch('${condition}') {
             case 'all_even': return lastDigits.every(d => d % 2 === 0);
             case 'all_odd': return lastDigits.every(d => d % 2 !== 0);

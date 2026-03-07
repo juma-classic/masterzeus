@@ -53,8 +53,8 @@ window.Blockly.JavaScript.switch_bot_on_loss = block => {
     
     const code = `
     (function() {
-        const lastProfit = Bot.getLastProfit();
-        if (lastProfit < 0) {
+        const result = Bot.readDetails(10);
+        if (result === 'loss') {
             console.log('🔄 Loss detected, switching to bot: ' + ${bot_name});
             Bot.stop();
             Bot.loadStrategy(${bot_name});

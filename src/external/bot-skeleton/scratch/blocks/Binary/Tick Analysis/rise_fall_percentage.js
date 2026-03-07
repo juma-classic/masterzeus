@@ -68,7 +68,9 @@ window.Blockly.JavaScript.javascriptGenerator.forBlock.rise_fall_percentage = bl
     const direction = block.getFieldValue('DIRECTION');
     
     const code = `(function() {
-        const lastDigits = Bot.getLastNDigits(${tick_count});
+        const allDigits = Bot.getLastDigitList();
+        const lastDigits = allDigits.slice(-${tick_count});
+        if (lastDigits.length < 2) return false;
         let risingCount = 0;
         for (let i = 1; i < lastDigits.length; i++) {
             if (lastDigits[i] > lastDigits[i-1]) risingCount++;
