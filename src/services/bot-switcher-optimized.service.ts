@@ -57,7 +57,7 @@ interface ContractTracker {
     isMonitoring: boolean;
 }
 
-class BotSwitcherService {
+class BotSwitcherServiceOptimized {
     private isEnabled: boolean = false;
     private bot1: BotConfig;
     private bot2: BotConfig;
@@ -65,14 +65,15 @@ class BotSwitcherService {
     private currentStake: number = 0;
     private customStake: number = 0;
     private isProcessing: boolean = false;
-    private processingTimeout: number | null = null;
+    private lastProcessingTime: number = 0;
+    private processingTimeout: NodeJS.Timeout | null = null;
     
     // Contract tracking
     private currentContract: ContractTracker | null = null;
     private contractSubscription: any = null;
     
     // WebSocket health monitoring
-    private wsHealthCheckInterval: number | null = null;
+    private wsHealthCheckInterval: NodeJS.Timeout | null = null;
     private lastApiResponse: number = Date.now();
     private isApiConnected: boolean = true;
     
@@ -139,6 +140,7 @@ class BotSwitcherService {
         
         this.isEnabled = true;
         this.isProcessing = false;
+        this.lastProcessingTime = 0;
         this.clearProcessingTimeout();
         
         console.log('✅ Bot Switcher ENABLED');
@@ -222,6 +224,7 @@ class BotSwitcherService {
         console.log('🔧 Manually resetting processing flag');
         console.log('🔍 Was processing:', this.isProcessing);
         this.isProcessing = false;
+        this.lastProcessingTime = 0;
         this.clearProcessingTimeout();
         console.log('✅ Processing flag reset');
     }
@@ -314,7 +317,7 @@ class BotSwitcherService {
         // Check if contract is sold
         if (contract.is_sold) {
             const profit = contract.sell_price - contract.buy_price;
-            console.log(`� Contract ${contract.contract_id} sold | Profit: ${profit.toFixed(2)}`);
+            console.log(`📊 Contract ${contract.contract_id} sold | Profit: ${profit.toFixed(2)}`);
             
             // Process the completed contract
             this.processCompletedContract({
@@ -338,7 +341,7 @@ class BotSwitcherService {
     }
 
     private async onContractComplete(contract: TContractInfo): Promise<void> {
-        console.log('� Contract event received via observer:', {
+        console.log('🔔 Contract event received via observer:', {
             is_sold: contract.is_sold,
             profit: contract.profit,
             contract_id: contract.id,
@@ -381,7 +384,7 @@ class BotSwitcherService {
         }
 
         // Check other switch triggers
-        const shouldSwitch = this.checkSwitchTriggers(isLoss, isWin);
+        const shouldSwitch = this.checkSwitchTriggers(isLoss, isWin, profit);
 
         if (shouldSwitch) {
             if (this.isProcessing) {
@@ -389,7 +392,7 @@ class BotSwitcherService {
                 return;
             }
 
-            console.log('� Switch trigger activated!');
+            console.log('🔄 Switch trigger activated!');
             await this.switchBot();
         }
     }
@@ -412,10 +415,19 @@ class BotSwitcherService {
             this.stats.consecutiveLosses = 0;
         }
 
+        // Calculate win rates
+        if (this.stats.bot1Trades > 0) {
+            // This would need more detailed tracking, simplified for now
+            this.stats.bot1WinRate = 0; // TODO: Track wins per bot
+        }
+        if (this.stats.bot2Trades > 0) {
+            this.stats.bot2WinRate = 0; // TODO: Track wins per bot
+        }
+
         console.log(`📊 Stats: Total: ${this.stats.totalTrades}, Losses: ${this.stats.consecutiveLosses}, Wins: ${this.stats.consecutiveWins}, Profit: ${this.stats.currentProfit.toFixed(2)}`);
     }
 
-    private checkSwitchTriggers(isLoss: boolean, isWin: boolean): boolean {
+    private checkSwitchTriggers(isLoss: boolean, isWin: boolean, profit: number): boolean {
         const triggers: string[] = [];
 
         if (this.switchTrigger.onLoss && isLoss) {
@@ -463,6 +475,7 @@ class BotSwitcherService {
         }
 
         this.isProcessing = true;
+        this.lastProcessingTime = Date.now();
         this.switchStartTime = Date.now();
         
         // Set timeout to auto-clear processing flag (safety net)
@@ -516,6 +529,7 @@ class BotSwitcherService {
             await this.recoverFromFailedSwitch();
         } finally {
             this.isProcessing = false;
+            this.lastProcessingTime = 0;
             this.clearProcessingTimeout();
             console.log('🔓 Processing flag CLEARED');
         }
@@ -536,17 +550,18 @@ class BotSwitcherService {
     private setProcessingTimeout(): void {
         this.clearProcessingTimeout();
         // Auto-clear processing flag after 30 seconds (safety net)
-        this.processingTimeout = window.setTimeout(() => {
+        this.processingTimeout = setTimeout(() => {
             if (this.isProcessing) {
                 console.warn('⚠️ Processing timeout reached - auto-clearing flag');
                 this.isProcessing = false;
+                this.lastProcessingTime = 0;
             }
         }, 30000);
     }
 
     private clearProcessingTimeout(): void {
         if (this.processingTimeout) {
-            window.clearTimeout(this.processingTimeout);
+            clearTimeout(this.processingTimeout);
             this.processingTimeout = null;
         }
     }
@@ -696,7 +711,7 @@ class BotSwitcherService {
 
     private startWebSocketHealthMonitoring(): void {
         // Check API health every 10 seconds
-        this.wsHealthCheckInterval = window.setInterval(() => {
+        this.wsHealthCheckInterval = setInterval(() => {
             const timeSinceLastResponse = Date.now() - this.lastApiResponse;
             
             if (timeSinceLastResponse > 30000) {
@@ -716,7 +731,7 @@ class BotSwitcherService {
 
     private stopWebSocketHealthMonitoring(): void {
         if (this.wsHealthCheckInterval) {
-            window.clearInterval(this.wsHealthCheckInterval);
+            clearInterval(this.wsHealthCheckInterval);
             this.wsHealthCheckInterval = null;
         }
     }
@@ -735,4 +750,4 @@ class BotSwitcherService {
 }
 
 // Export singleton instance
-export const botSwitcherService = new BotSwitcherService();
+export const botSwitcherServiceOptimized = new BotSwitcherServiceOptimized();
