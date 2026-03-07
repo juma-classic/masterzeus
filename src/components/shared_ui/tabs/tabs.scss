@@ -225,13 +225,13 @@
         display: flex;
         align-items: center;
         gap: 0.75rem;
-        padding: 1rem 1.5rem !important;
+        padding: 1.2rem 1.8rem !important;
         // Bull vs Bear gradient background
         background: linear-gradient(135deg, #0a0e27 0%, #0f1419 50%, #140a14 100%);
         border: 2px solid rgba(100, 100, 100, 0.3);
         border-radius: 12px;
         color: rgba(255, 255, 255, 0.85) !important;
-        font-size: 13px;
+        font-size: 14px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -272,8 +272,8 @@
 
         // Icon styling with bull/bear theme
         svg {
-            width: 28px;
-            height: 28px;
+            width: 32px;
+            height: 32px;
             transition: all 0.3s ease;
             filter: drop-shadow(0 2px 4px rgba(0, 191, 255, 0.3));
             color: #00BFFF !important;
