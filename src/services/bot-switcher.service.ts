@@ -226,6 +226,19 @@ class BotSwitcherService {
         console.log('✅ Processing flag reset');
     }
 
+    public testEventSystem(): void {
+        console.log('🧪 Testing Bot Switcher Event System');
+        console.log('🔍 Is Enabled:', this.isEnabled);
+        console.log('🔍 Observer available:', !!observer);
+        if (observer) {
+            console.log('🔍 bot.contract registered:', observer.isRegistered('bot.contract'));
+            console.log('🔍 contract.status registered:', observer.isRegistered('contract.status'));
+        }
+        console.log('🔍 Current stats:', this.getStats());
+        console.log('🔍 API connected:', this.isApiConnected);
+        console.log('🔍 Last API response:', new Date(this.lastApiResponse).toISOString());
+    }
+
     // ==================== CONTRACT MONITORING ====================
 
     private registerContractListener(): void {
@@ -240,6 +253,10 @@ class BotSwitcherService {
             observer.register('contract.status', this.onContractStatus.bind(this));
             
             console.log('✅ Registered contract listeners');
+            console.log('🔍 Observer registered events:', {
+                'bot.contract': observer.isRegistered('bot.contract'),
+                'contract.status': observer.isRegistered('contract.status')
+            });
         } catch (error) {
             console.error('❌ Error registering contract listeners:', error);
         }
@@ -338,27 +355,38 @@ class BotSwitcherService {
     }
 
     private async onContractComplete(contract: TContractInfo): Promise<void> {
-            console.log('🔔 Contract event received via observer:', {
-                is_sold: contract.is_sold,
-                profit: contract.profit,
-                contract_id: contract.id,
-            });
+        console.log('🔔 Contract event received via observer:', {
+            is_sold: contract.is_sold,
+            profit: contract.profit,
+            contract_id: contract.id,
+            isEnabled: this.isEnabled,
+            timestamp: new Date().toISOString()
+        });
 
-            if (!this.isEnabled) return;
-
-            // Subscribe to this contract via Deriv API for real-time updates
-            if (contract.id && !contract.is_sold) {
-                this.subscribeToContract(contract.id);
-                console.log('📡 Subscribed to contract via Deriv API');
-            }
-
-            if (!contract.is_sold) return;
-
-            // Process via observer (backup method)
-            if (!this.currentContract?.isMonitoring) {
-                this.processCompletedContract(contract);
-            }
+        if (!this.isEnabled) {
+            console.warn('⚠️ Bot Switcher is disabled, ignoring contract');
+            return;
         }
+
+        // Subscribe to this contract via Deriv API for real-time updates
+        if (contract.id && !contract.is_sold) {
+            this.subscribeToContract(contract.id);
+            console.log('📡 Subscribed to contract via Deriv API');
+        }
+
+        if (!contract.is_sold) {
+            console.log('⏳ Contract not yet sold, waiting...');
+            return;
+        }
+
+        // Process via observer (backup method)
+        if (!this.currentContract?.isMonitoring) {
+            console.log('✅ Processing contract via observer');
+            this.processCompletedContract(contract);
+        } else {
+            console.log('⏭️ Skipping observer processing (Direct API already handled it)');
+        }
+    }
 
 
     // ==================== CONTRACT PROCESSING ====================

@@ -73,6 +73,11 @@ export const BotSwitcher: React.FC = () => {
         botSwitcherService.resetProcessingFlag();
     };
 
+    const handleTestEvents = () => {
+        console.log('🧪 Testing event system from UI...');
+        botSwitcherService.testEventSystem();
+    };
+
     const handleBot1Change = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const botId = e.target.value;
         setSelectedBot1(botId);
@@ -372,6 +377,13 @@ export const BotSwitcher: React.FC = () => {
                     disabled={!isEnabled}
                 >
                     🔧 Manual Switch
+                </button>
+
+                <button
+                    className='bot-switcher__button bot-switcher__button--test'
+                    onClick={handleTestEvents}
+                >
+                    🧪 Test Events
                 </button>
 
                 <button
