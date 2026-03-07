@@ -338,19 +338,28 @@ class BotSwitcherService {
     }
 
     private async onContractComplete(contract: TContractInfo): Promise<void> {
-        console.log('� Contract event received via observer:', {
-            is_sold: contract.is_sold,
-            profit: contract.profit,
-            contract_id: contract.id,
-        });
+            console.log('🔔 Contract event received via observer:', {
+                is_sold: contract.is_sold,
+                profit: contract.profit,
+                contract_id: contract.id,
+            });
 
-        if (!this.isEnabled || !contract.is_sold) return;
+            if (!this.isEnabled) return;
 
-        // Process via observer (backup method)
-        if (!this.currentContract?.isMonitoring) {
-            this.processCompletedContract(contract);
+            // Subscribe to this contract via Deriv API for real-time updates
+            if (contract.id && !contract.is_sold) {
+                this.subscribeToContract(contract.id);
+                console.log('📡 Subscribed to contract via Deriv API');
+            }
+
+            if (!contract.is_sold) return;
+
+            // Process via observer (backup method)
+            if (!this.currentContract?.isMonitoring) {
+                this.processCompletedContract(contract);
+            }
         }
-    }
+
 
     // ==================== CONTRACT PROCESSING ====================
 
